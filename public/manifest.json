@@ -1,0 +1,33 @@
+{
+  "short_name": "Tab-Finder",
+  "name": "Tab-Finder",
+  "description": "A simple browser extension to help you manage open tabs.",
+  "version": "1.0.0",
+  "manifest_version": 2,
+  "icons": {
+    "32": "logo192.png",
+    "48": "logo192.png"
+  },
+  "browser_action": {
+    "default_popup": "index.html",
+    "default_title": "Open Tab-Finder",
+    "default_icon": {
+      "16": "logo192.png",
+      "32": "logo192.png",
+      "48": "logo192.png",
+      "128": "logo192.png"
+    }
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "permissions": ["tabs"],
+  "content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='; object-src 'self'"
+}
