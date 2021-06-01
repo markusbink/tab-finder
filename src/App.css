@@ -1,3 +1,9 @@
+:root {
+  --black: #20222C; 
+  --green: #77D287;
+  --light-grey: #E4E4E4;
+}
+
 * {
   box-sizing: border-box;
   font-size: 16px;
@@ -18,28 +24,30 @@ ul {
 .header {
   padding: 20px;
   text-align: left;
-  border-bottom: 1px dashed #77D287;
-  background-color: #20222C;
-  color: #E4E4E4;
+  background-color: var(--black);
+  color: var(--light-grey);
 }
 
 .App h2 {
-  color: #77D287;
-}
-
-.content {
-  border-top: 1px dashed #77D287;
+  color: var(--green);
 }
 
 .tab-count-wrapper {
-  padding: 20px;
-  font-size: 14px;
-  font-weight: 300;
+  padding: 10px 20px;
+  background-color: var(--green);
+}
+
+.tab-count-wrapper h4 {
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .tab-count {
-  color: #77D287;
-  font-weight: 600;
+  color: var(--green);
+  padding: 3px 5px;
+  background: white;
+  border-radius: 4px;
+  font-weight: 800;
 }
 
 .tab-list {
@@ -52,7 +60,7 @@ ul {
   display: flex;
   align-items: center;
   border-bottom: 1px solid #00000011;
-  text-align: left;;
+  text-align: left;
   padding: 10px;
   transition: all 0.2s ease-in-out;
 }
