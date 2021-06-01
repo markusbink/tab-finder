@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
-import { Header } from './components/Header';
-import { TabCounter } from './components/TabCounter';
+import { TabHeader } from './components/TabHeader';
 import { TabList } from './components/TabList';
 
 const App: React.FC = () => {
@@ -20,8 +19,7 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <Header/>
-      <TabCounter count={tabCount}/>
+      <TabHeader count={tabCount}/>
         <TabList tabs={tabs}/>
     </div>
   );
