@@ -28,6 +28,14 @@
       "run_at": "document_end"
     }
   ],
+  "web_accessible_resources": [
+    "fonts/Inter-Light.woff",
+    "fonts/Inter-Medium.woff",
+    "fonts/Inter-Bold.woff",
+    "fonts/Inter-Light.woff2",
+    "fonts/Inter-Medium.woff2",
+    "fonts/Inter-Bold.woff2"
+  ],
   "permissions": ["tabs"],
   "content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='; object-src 'self'"
 }
