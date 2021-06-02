@@ -6,7 +6,7 @@ import { TabList } from './components/TabList';
 const App: React.FC = () => {
 
   const [tabCount, setTabCount] = useState<number>(0);
-  const [tabs, setTabs] = useState<Tab[] | any>([]);
+  const [tabs, setTabs] = useState<chrome.tabs.Tab[]>([]);
 
   useEffect(() => {
     chrome.tabs.query({}, tabs => {
@@ -59,7 +59,7 @@ const App: React.FC = () => {
   return (
     <div className="App">
       <TabHeader count={tabCount}/>
-        <TabList tabs={tabs}/>
+        <TabList tabs={tabs} setTabs={setTabs} setTabCount={setTabCount}/>
     </div>
   );
 }

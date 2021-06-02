@@ -1,3 +1,32 @@
+@font-face {
+  font-family: 'Inter';
+  src: url('chrome-extension://__MSG_@@extension_id__/fonts/Inter-Medium.woff2') format('woff2'),
+      url('chrome-extension://__MSG_@@extension_id__/fonts/Inter-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('chrome-extension://__MSG_@@extension_id__/fonts/Inter-Light.woff2') format('woff2'),
+      url('chrome-extension://__MSG_@@extension_id__/fonts/Inter-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('chrome-extension://__MSG_@@extension_id__/fonts/Inter-Bold.woff2') format('woff2'),
+      url('chrome-extension://__MSG_@@extension_id__/fonts/Inter-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+
 :root {
   --black: #15181E; 
   --dark-grey: #292B36;
@@ -13,6 +42,11 @@
   margin: 0;
 }
 
+body {
+  font-family: 'Inter', BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-style: normal;
+}
+
 ul {
   padding: 0;
 }
@@ -20,8 +54,10 @@ ul {
 .App {
   text-align: center;
   width: 350px;
-  height: auto;
+  height: 400px;
   background: var(--black);
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
@@ -100,7 +136,6 @@ ul {
   height: 100%;
   overflow-y: scroll;
   padding: 10px;
-  max-height: 250px;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
@@ -137,17 +172,19 @@ ul {
   -webkit-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
+  position: relative;
+  border: 2px solid var(--dark-grey);
 }
 
 .tab-item:hover {
-  background-color: var(--light-grey);
-  color: var(--dark-grey);
-  cursor: pointer;
+  /* cursor: pointer; */
+  border: 2px solid var(--light-grey);
 }
 
 .tab-item h4 {
   font-size: 14px;
   line-height: 1;
+  font-weight: 500;
 }
 
 .tab-item img, .tab-item .img-placeholder {
@@ -160,4 +197,40 @@ ul {
   background: #ddd;
   border-radius: 6p;
   display: inline-block;
+}
+
+.tab-item .actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background-image: linear-gradient(270deg,var(--dark-grey),85%,transparent);
+  background-image: linear-gradient(270deg,var(--dark-grey),85%,transparent);
+  display: flex;
+  align-items: center;
+  padding: 0 10px 0 30px;
+}
+
+.tab-item:hover .actions {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.tab-item .actions .action {
+  padding: 5px;
+  background: var(--light-grey);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.tab-item .actions .action:not(:last-child) {
+  margin-right: 5px;
+}
+
+.tab-item .actions svg {
+  height: 20px;
+  width: 20px;
 }
