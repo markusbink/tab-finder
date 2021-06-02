@@ -42,9 +42,9 @@ export const TabItem: React.FC<TabItemProps> = ({tab, setTabs, setTabCount}) => 
     // Remove tab from browser
     chrome.tabs.remove(tabId);
     // Update UI in extension popup
-    chrome.tabs.query({}, tabs => {
-      setTabs(tabs);
-      setTabCount(tabs.length);
+    chrome.tabs.query({}, (tabs) => {
+      setTabs(tabs.filter(tab => tab.id != tabId));
+      setTabCount((tabs.filter(tab => tab.id != tabId)).length);
     });
   }
 
