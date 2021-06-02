@@ -12,6 +12,7 @@ interface TabItemProps {
 export const TabItem: React.FC<TabItemProps> = ({tab, setTabs, setTabCount}) => {
 
   const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [isSelected, setIsSelected] = useState<boolean>(false);
 
   useEffect(() => {
     chrome.tabs.get(tab.id!, async (currentTab) => {
@@ -20,12 +21,25 @@ export const TabItem: React.FC<TabItemProps> = ({tab, setTabs, setTabCount}) => 
     });;
   }, [])
 
+  const selectTab = () => {
+    setIsSelected(prevIsSelected => !prevIsSelected);
+  }
+
+
+  const onTabClicked = (e: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number) => {
+    if(e.metaKey) {
+      selectTab();
+    } else {
+      goToTab(index);
+    }
+  }
+
     /**
    * Goes to selected tab based on index
    * @param index Index of to be opened tab
    */
   const goToTab = (index: number): void => {
-    chrome.tabs.highlight({'tabs': index}, function() {});
+    chrome.tabs.highlight({'tabs': index});
   }
 
   const toggleAudio = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, tabId: number): void => {
@@ -49,13 +63,12 @@ export const TabItem: React.FC<TabItemProps> = ({tab, setTabs, setTabCount}) => 
   }
 
 
-
   function truncate(text: string, length: number){
     return (text.length > length) ? text.substr(0, length-1) + '...' : text;
   };
 
     return (
-        <li onClick={() => goToTab(tab.index)}className="tab-item">
+        <li onClick={(e) => onTabClicked(e, tab.index)} className={`tab-item ${isSelected ? 'selected' : ''}`}>
           {tab.favIconUrl ? (
             <img src={tab.favIconUrl}/>
           ) : (
