@@ -2,17 +2,16 @@ import React, {useState, useEffect} from "react";
 import { Close } from "../assets/icons/Close";
 import { SpeakerOff } from "../assets/icons/SpeakerOff";
 import { SpeakerOn } from "../assets/icons/SpeakerOn";
+import { useTabContext } from "../contexts/TabContext";
 
 interface TabItemProps {
     tab: chrome.tabs.Tab;
-    setTabs: (tabs: chrome.tabs.Tab[]) => void;
-    setTabCount: (tabCount: number) => void;
 }
 
-export const TabItem: React.FC<TabItemProps> = ({tab, setTabs, setTabCount}) => {
-
+export const TabItem: React.FC<TabItemProps> = ({tab}) => {
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [isSelected, setIsSelected] = useState<boolean>(false);
+  const {setTabs, setTabCount} = useTabContext();
 
   useEffect(() => {
     chrome.tabs.get(tab.id!, async (currentTab) => {
@@ -24,7 +23,6 @@ export const TabItem: React.FC<TabItemProps> = ({tab, setTabs, setTabCount}) => 
   const selectTab = () => {
     setIsSelected(prevIsSelected => !prevIsSelected);
   }
-
 
   const onTabClicked = (e: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number) => {
     if(e.metaKey) {
@@ -61,7 +59,6 @@ export const TabItem: React.FC<TabItemProps> = ({tab, setTabs, setTabCount}) => 
       setTabCount((tabs.filter(tab => tab.id != tabId)).length);
     });
   }
-
 
   function truncate(text: string, length: number){
     return (text.length > length) ? text.substr(0, length-1) + '...' : text;
