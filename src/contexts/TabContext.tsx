@@ -82,7 +82,7 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
         ) {
             chrome.runtime.getPlatformInfo((info) => redrawAnimation(info));
         }
-    }, []);
+    }, [tabs]);
 
     return (
         <TabContext.Provider

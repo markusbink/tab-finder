@@ -20,6 +20,7 @@ export const TabItem: React.FC<TabItemProps> = ({ tab }) => {
 
     // Initially check whether a tab is muted or not
     useEffect(() => {
+        console.log({ group: tab.groupId });
         chrome.tabs.get(tab.id!, async (currentTab) => {
             const muted = currentTab.mutedInfo?.muted;
             setIsMuted(() => !!muted);
@@ -70,7 +71,9 @@ export const TabItem: React.FC<TabItemProps> = ({ tab }) => {
     return (
         <li
             onClick={(e) => onTabClicked(e, tab.id!)}
-            className={`tab-item ${isSelected ? "selected" : ""}`}>
+            className={`tab-item ${isSelected ? "selected" : ""} ${
+                tab.groupId !== -1 ? "grouped" : ""
+            }`}>
             {tab.favIconUrl ? (
                 <img src={tab.favIconUrl} alt="Favicon of individual tab" />
             ) : (

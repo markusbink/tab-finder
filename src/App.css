@@ -36,6 +36,7 @@
     --dark-grey: #292b36;
     --light-grey: #aab1d0;
     --green: #56cb82;
+    --orange: #cb7656;
 }
 
 * {
@@ -187,6 +188,10 @@ ul {
 .tab-item:hover {
     /* cursor: pointer; */
     border: 2px solid var(--light-grey);
+}
+
+.tab-item.grouped {
+    border: 2px solid var(--orange);
 }
 
 .tab-item.selected {
