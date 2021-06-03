@@ -3,14 +3,13 @@ import { useTabContext } from "../contexts/TabContext";
 import { TabItem } from "./TabItem";
 
 export const TabList: React.FC = () => {
-    const {tabs}= useTabContext();
+    const { tabs } = useTabContext();
 
     return (
         <ul className="tab-list">
-      {tabs.map((tab: chrome.tabs.Tab) => (
-          <TabItem tab={tab} />
-      ))}
-      </ul>
-    )
-
-}
+            {tabs.map((tab: chrome.tabs.Tab) => (
+                <TabItem key={tab.id} tab={tab} />
+            ))}
+        </ul>
+    );
+};

@@ -8,14 +8,25 @@ interface GroupActionBarProps {
     successAction: () => void;
 }
 
-export const GroupActionBar: React.FC<GroupActionBarProps> = ({denyTitle, denyAction, successTitle, successAction}) => {
-    const {isGroupActionBarVisible} = useTabContext();
+export const GroupActionBar: React.FC<GroupActionBarProps> = ({
+    denyTitle,
+    denyAction,
+    successTitle,
+    successAction,
+}) => {
+    const { isGroupActionBarVisible } = useTabContext();
 
     return (
-        <div className={`group-action-bar ${isGroupActionBarVisible ? 'visible': ''}`}>
-            <button onClick={() => denyAction()}className="action deny">{denyTitle}</button>
-            <button onClick={() => successAction()}className="action success">{successTitle}</button>
+        <div
+            className={`group-action-bar ${
+                isGroupActionBarVisible ? "visible" : ""
+            }`}>
+            <button onClick={() => denyAction()} className="action deny">
+                {denyTitle}
+            </button>
+            <button onClick={() => successAction()} className="action success">
+                {successTitle}
+            </button>
         </div>
-    )
-
-}
+    );
+};

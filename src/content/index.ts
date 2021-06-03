@@ -1,4 +1,1 @@
-
-export const Content = () => {
-    
-}
+export const Content = () => {};
