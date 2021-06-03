@@ -6,13 +6,21 @@ interface ITabContext {
     setTabs: (tabs: chrome.tabs.Tab[]) => void;
     tabCount: number;
     setTabCount: (count: number) => void;
+    selectedTabs: number[];
+    setSelectedTabs: (tabIds: number[]) => void;
+    isGroupActionBarVisible: boolean;
+    setIsGroupActionBarVisible: (val: boolean) => void;
 }
 
 export const TabContext = createContext<ITabContext>({
     tabs: [],
     setTabs: () => {},
     tabCount: 0,
-    setTabCount: () => {}
+    setTabCount: () => {},
+    selectedTabs: [],
+    setSelectedTabs: () => {},
+    isGroupActionBarVisible: false,
+    setIsGroupActionBarVisible: () => {}
 });
 
 interface TabContextProviderProps {
@@ -22,6 +30,8 @@ interface TabContextProviderProps {
 export const TabContextProvider: React.FC<TabContextProviderProps> = ({children}) => {
     const [tabs, setTabs] = useState<chrome.tabs.Tab[]>([]);
     const [tabCount, setTabCount] = useState<number>(0);
+    const [selectedTabs, setSelectedTabs] = useState<number[]>([]);
+    const [isGroupActionBarVisible, setIsGroupActionBarVisible] = useState<boolean>(false);
 
     useEffect(() => {
         chrome.tabs.query({}, tabs => {
@@ -72,7 +82,7 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({children}
       }}, []);
 
     return (
-        <TabContext.Provider value={{tabs, setTabs, tabCount, setTabCount}}>
+        <TabContext.Provider value={{tabs, setTabs, tabCount, setTabCount, selectedTabs, setSelectedTabs, isGroupActionBarVisible, setIsGroupActionBarVisible}}>
             {children}
         </TabContext.Provider>
     )

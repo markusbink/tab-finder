@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from "react";
-import { Close } from "../assets/icons/Close";
-import { SpeakerOff } from "../assets/icons/SpeakerOff";
-import { SpeakerOn } from "../assets/icons/SpeakerOn";
 import { useTabContext } from "../contexts/TabContext";
+import { truncate } from "../helpers/helpers";
+import { CloseTabBtn } from "./CloseTabBtn";
+import { ToggleAudioBtn } from "./ToggleAudioBtn";
 
 interface TabItemProps {
     tab: chrome.tabs.Tab;
@@ -11,74 +11,65 @@ interface TabItemProps {
 export const TabItem: React.FC<TabItemProps> = ({tab}) => {
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [isSelected, setIsSelected] = useState<boolean>(false);
-  const {setTabs, setTabCount} = useTabContext();
+  const {selectedTabs, setSelectedTabs, setIsGroupActionBarVisible, isGroupActionBarVisible} = useTabContext();
 
+
+  // Initially check whether a tab is muted or not
   useEffect(() => {
     chrome.tabs.get(tab.id!, async (currentTab) => {
       const muted = currentTab.mutedInfo?.muted;
       setIsMuted(() => !!muted);
-    });;
-  }, [])
+    });
+  }, [tab.id])
 
-  const selectTab = () => {
+  
+  // Deselect all tab items once a group action has been triggered
+  useEffect(() => {
+    if(!isGroupActionBarVisible) {
+      setIsSelected(false);
+    }
+  }, [isGroupActionBarVisible])
+
+  // Select and highlight the currently clicked tab
+  const selectTab = (tabId: number) => {
     setIsSelected(prevIsSelected => !prevIsSelected);
+
+    let updatedTabs: number[] = [];
+    if(selectedTabs.includes(tabId)) {
+      updatedTabs = selectedTabs.filter(id => id !== tabId);
+    } else {
+      updatedTabs = [...selectedTabs, tabId];
+    }
+    setSelectedTabs(updatedTabs);  
+    updatedTabs.length > 1 ? setIsGroupActionBarVisible(true) : setIsGroupActionBarVisible(false);
   }
 
-  const onTabClicked = (e: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number) => {
+  // Go to tab that was clicked on
+  const goToTab = (tabId: number): void => {
+    chrome.tabs.highlight({'tabs': tabId});
+  }
+
+  const onTabClicked = (e: React.MouseEvent<HTMLLIElement, MouseEvent>, tabId: number) => {
     if(e.metaKey) {
-      selectTab();
+      selectTab(tabId);
     } else {
-      goToTab(index);
+      chrome.tabs.get(tabId, tab => {
+        goToTab(tab.index);
+      })
     }
   }
 
-    /**
-   * Goes to selected tab based on index
-   * @param index Index of to be opened tab
-   */
-  const goToTab = (index: number): void => {
-    chrome.tabs.highlight({'tabs': index});
-  }
-
-  const toggleAudio = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, tabId: number): void => {
-    e.stopPropagation();
-    chrome.tabs.get(tabId, async (tab) => {
-      const muted = !tab.mutedInfo?.muted;
-      await chrome.tabs.update(tabId, { muted });
-      setIsMuted(() => muted);
-    });
-  }
-
-  const closeTab = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, tabId: number): void => {
-    e.stopPropagation();
-    // Remove tab from browser
-    chrome.tabs.remove(tabId);
-    // Update UI in extension popup
-    chrome.tabs.query({}, (tabs) => {
-      setTabs(tabs.filter(tab => tab.id != tabId));
-      setTabCount((tabs.filter(tab => tab.id != tabId)).length);
-    });
-  }
-
-  function truncate(text: string, length: number){
-    return (text.length > length) ? text.substr(0, length-1) + '...' : text;
-  };
-
     return (
-        <li onClick={(e) => onTabClicked(e, tab.index)} className={`tab-item ${isSelected ? 'selected' : ''}`}>
+        <li onClick={(e) => onTabClicked(e, tab.id!)} className={`tab-item ${isSelected ? 'selected' : ''}`}>
           {tab.favIconUrl ? (
-            <img src={tab.favIconUrl}/>
+            <img src={tab.favIconUrl} alt="Favicon of individual tab"/>
           ) : (
             <span className="img-placeholder"></span>
           )}
           <h4>{truncate(tab.title!, 35)}</h4>
           <div className="actions">
-            <div onClick={(e) => toggleAudio(e, tab.id!)} className="action audio">
-              {isMuted ?? !tab.audible ? <SpeakerOff/> : <SpeakerOn/>}
-            </div>
-            <div onClick={(e) => closeTab(e, tab.id!)} className="action close">
-              <Close/>
-            </div>
+            <ToggleAudioBtn tab={tab} isMuted={isMuted} setIsMuted={setIsMuted}/>
+            <CloseTabBtn tab={tab} />
           </div>
         </li>
     )
