@@ -1,8 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
+type Dispatch<A> = (value: A) => void;
+type SetStateAction<S> = S | ((prevState: S) => S);
+
 interface ITabContext {
     tabs: chrome.tabs.Tab[];
-    setTabs: (tabs: chrome.tabs.Tab[]) => void;
+    setTabs: Dispatch<SetStateAction<chrome.tabs.Tab[]>>;
     tabCount: number;
     setTabCount: (count: number) => void;
     selectedTabs: number[];
