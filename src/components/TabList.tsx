@@ -27,6 +27,7 @@ export const TabList: React.FC<TabListProps> = ({ tabs }) => {
         // Make groups unselectable
         // Add differenct colours for different groups
         // Persist state
+        // Add X to search input
         <List
             values={tabs}
             onChange={({ oldIndex, newIndex }) =>
@@ -38,9 +39,7 @@ export const TabList: React.FC<TabListProps> = ({ tabs }) => {
                 </ul>
             )}
             renderItem={({ value, props }) => (
-                <div {...props}>
-                    <TabItem tab={value} />
-                </div>
+                <TabItem {...props} tab={value} />
             )}
         />
     );

@@ -87,8 +87,8 @@ export const TabItem: React.FC<TabItemProps> = React.forwardRef(
                 ref={ref}
                 {...props}
                 onClick={(e) => onTabClicked(e, tab.id!)}
-                className={`tab-item ${isSelected ? "selected" : ""} ${
-                    tab.groupId !== -1 ? "grouped" : ""
+                className={`tab-item ${isSelected && "selected"} ${
+                    tab.groupId !== -1 && "grouped"
                 }`}>
                 {tab.favIconUrl ? (
                     <img src={tab.favIconUrl} alt="Favicon of individual tab" />
