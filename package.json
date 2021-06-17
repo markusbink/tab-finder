@@ -41,7 +41,6 @@
         ]
     },
     "devDependencies": {
-        "@types/chrome": "0.0.142",
-        "webpack-cli": "^4.7.0"
+        "@types/chrome": "0.0.142"
     }
 }

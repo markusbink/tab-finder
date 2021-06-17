@@ -32,6 +32,7 @@
 }
 
 :root {
+    --dark-black: #07080c;
     --black: #15181e;
     --dark-grey: #292b36;
     --light-grey: #aab1d0;
@@ -135,6 +136,24 @@ ul {
     margin-left: 7px;
     padding-left: 7px;
     border-left: 2px solid var(--light-grey);
+}
+
+.search-wrapper {
+    padding: 10px;
+}
+
+input.search {
+    background: var(--dark-black);
+    color: var(--light-grey);
+    border-radius: 6px;
+    padding: 15px;
+    border: 0;
+    outline: none;
+    width: 100%;
+}
+
+input.search::placeholder {
+    color: var(--dark-grey);
 }
 
 .tab-list {

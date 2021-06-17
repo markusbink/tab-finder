@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTabContext } from "../contexts/TabContext";
-import { truncate } from "../helpers/helpers";
+import Helper from "../helpers/Helper";
+import Tab from "../helpers/Tab";
 import { CloseTabBtn } from "./CloseTabBtn";
 import { ToggleAudioBtn } from "./ToggleAudioBtn";
 
@@ -20,12 +21,11 @@ export const TabItem: React.FC<TabItemProps> = ({ tab }) => {
 
     // Initially check whether a tab is muted or not
     useEffect(() => {
-        console.log({ group: tab.groupId });
         chrome.tabs.get(tab.id!, async (currentTab) => {
             const muted = currentTab.mutedInfo?.muted;
             setIsMuted(() => !!muted);
         });
-    }, [tab.id]);
+    }, [tab.id, tab.groupId]);
 
     // Deselect all tab items once a group action has been triggered
     useEffect(() => {
@@ -50,22 +50,17 @@ export const TabItem: React.FC<TabItemProps> = ({ tab }) => {
             : setIsGroupActionBarVisible(false);
     };
 
-    // Go to tab that was clicked on
-    const goToTab = (tabId: number): void => {
-        chrome.tabs.highlight({ tabs: tabId });
-    };
-
     const onTabClicked = (
         e: React.MouseEvent<HTMLLIElement, MouseEvent>,
         tabId: number
     ) => {
         if (e.metaKey) {
             selectTab(tabId);
-        } else {
-            chrome.tabs.get(tabId, (tab) => {
-                goToTab(tab.index);
-            });
+            return;
         }
+        chrome.tabs.get(tabId, (tab) => {
+            Tab.goToTab(tab.index);
+        });
     };
 
     return (
@@ -79,7 +74,7 @@ export const TabItem: React.FC<TabItemProps> = ({ tab }) => {
             ) : (
                 <span className="img-placeholder"></span>
             )}
-            <h4>{truncate(tab.title!, 35)}</h4>
+            <h4>{Helper.truncate(tab.title!, 35)}</h4>
             <div className="actions">
                 <ToggleAudioBtn
                     tab={tab}

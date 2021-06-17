@@ -36,11 +36,16 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
         useState<boolean>(false);
 
     useEffect(() => {
-        chrome.tabs.query({}, (tabs) => {
+        chrome.tabs.query({}, (tabs: chrome.tabs.Tab[]) => {
             setTabCount(tabs.length);
             setTabs(tabs);
         });
 
+        /**
+         * Temporary workaround for secondary monitors on MacOS where redraws don't happen
+         * @See https://bugs.chromium.org/p/chromium/issues/detail?id=971701
+         * Solution from: https://stackoverflow.com/questions/56500742/why-is-my-google-chrome-extensions-popup-ui-laggy-on-external-monitors-but-not
+         */
         const redrawAnimation = (info: chrome.runtime.PlatformInfo) => {
             if (info.os === "mac") {
                 const fontFaceSheet = new CSSStyleSheet();
@@ -68,11 +73,6 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
             }
         };
 
-        /**
-         * Temporary workaround for secondary monitors on MacOS where redraws don't happen
-         * @See https://bugs.chromium.org/p/chromium/issues/detail?id=971701
-         * Solution from: https://stackoverflow.com/questions/56500742/why-is-my-google-chrome-extensions-popup-ui-laggy-on-external-monitors-but-not
-         */
         if (
             // From testing the following conditions seem to indicate that the popup was opened on a secondary monitor
             window.screenLeft < 0 ||
