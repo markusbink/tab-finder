@@ -23,8 +23,8 @@ export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
 
     // Initially check whether a tab is muted or not
     React.useEffect(() => {
-        chrome.tabs.get(tab.id!, async (currentTab) => {
-            const muted = currentTab.mutedInfo?.muted;
+        chrome.tabs.get(tab.id!, async (tab) => {
+            const muted = tab?.mutedInfo?.muted;
             setIsMuted(() => !!muted);
         });
     }, [tab.id, tab.groupId]);

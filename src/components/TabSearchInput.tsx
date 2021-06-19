@@ -1,18 +1,11 @@
 import * as React from "react";
 import { Clear } from "../assets/icons/Clear";
+import { useTabContext } from "../contexts/TabContext";
 
-interface TabSearchInputProps {
-    onInputChanged: React.ChangeEventHandler<HTMLInputElement>;
-    setSearchTerm: (term: string) => void;
-    searchTerm: string;
-}
-
-export const TabSearchInput: React.FC<TabSearchInputProps> = ({
-    onInputChanged,
-    searchTerm,
-    setSearchTerm,
-}) => {
+export const TabSearchInput: React.FC = ({}) => {
     const inputRef = React.useRef<HTMLInputElement>(null);
+    const { searchTerm, setSearchTerm, tabs, setFilteredTabs } =
+        useTabContext();
 
     React.useEffect(() => {
         // Make input focusable when popup opens
@@ -27,6 +20,10 @@ export const TabSearchInput: React.FC<TabSearchInputProps> = ({
             }
         });
     }, []);
+
+    const onInputChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(e.target.value);
+    };
 
     return (
         <div className="search-wrapper">

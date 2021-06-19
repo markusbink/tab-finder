@@ -6,11 +6,16 @@ import { TabHeader } from "./components/TabHeader";
 import { TabList } from "./components/TabList";
 import { TabSearchInput } from "./components/TabSearchInput";
 import { useTabContext } from "./contexts/TabContext";
+import Helper from "./helpers/Helper";
 
 const App: React.FC = () => {
-    const { setIsGroupActionBarVisible, selectedTabs, tabs, setTabs } =
-        useTabContext();
-    const [searchTerm, setSearchTerm] = React.useState<string>("");
+    const {
+        tabs,
+        setTabs,
+        searchTerm,
+        setIsGroupActionBarVisible,
+        selectedTabs,
+    } = useTabContext();
 
     const denyAction = () => {
         setIsGroupActionBarVisible(false);
@@ -25,24 +30,20 @@ const App: React.FC = () => {
         groupHighlightedTabs(selectedTabs);
     };
 
-    const onInputChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(event.target.value);
-    };
-
     // Function to change the order of a list based on previous and new location
     const reorder = (
-        tabs: chrome.tabs.Tab[],
+        list: chrome.tabs.Tab[],
         startIndex: number,
         endIndex: number
-    ) => {
-        const result = Array.from(tabs);
+    ): chrome.tabs.Tab[] => {
+        const result = Array.from(list);
         const [removed] = result.splice(startIndex, 1);
         result.splice(endIndex, 0, removed);
 
         return result;
     };
 
-    const onDragEnd = (result: DropResult) => {
+    const onDragEnd = async (result: DropResult): Promise<void> => {
         if (!result.destination) {
             return;
         }
@@ -57,33 +58,24 @@ const App: React.FC = () => {
         setTabs(items);
 
         // Change order of tabs based on Drag and Drop change
-        chrome.tabs.query({ index: result.source.index }, (tabs) => {
-            if (!tabs) {
-                return;
-            }
-            const tabId: number = tabs[0].id!;
-            chrome.tabs.move(tabId, { index: result.destination?.index! });
-        });
+        const changedTabs = await chrome.tabs.query({ index: result.source.index });
+        if (!changedTabs) {
+            return;
+        }
+        const tabId: number = changedTabs[0].id!;
+        chrome.tabs.move(tabId, { index: result.destination?.index! });
     };
 
     return (
         <div className="App">
             <TabHeader />
-            <TabSearchInput
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-                onInputChanged={onInputChanged}
-            />
+            <TabSearchInput />
             <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
                 <Droppable droppableId="tab-tabs" key="tab-list">
                     {(provided) => (
                         <TabList
                             provided={provided}
-                            tabs={tabs.filter((tab) =>
-                                tab
-                                    .title!.toLowerCase()
-                                    .includes(searchTerm.toLowerCase())
-                            )}
+                            tabs={Helper.filterTabsByTerm(tabs, searchTerm)}
                         />
                     )}
                 </Droppable>

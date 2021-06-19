@@ -6,6 +6,10 @@ type SetStateAction<S> = S | ((prevState: S) => S);
 interface ITabContext {
     tabs: chrome.tabs.Tab[];
     setTabs: Dispatch<SetStateAction<chrome.tabs.Tab[]>>;
+    filteredTabs: chrome.tabs.Tab[];
+    setFilteredTabs: Dispatch<SetStateAction<chrome.tabs.Tab[]>>;
+    searchTerm: string;
+    setSearchTerm: (term: string) => void;
     tabCount: number;
     setTabCount: (count: number) => void;
     selectedTabs: number[];
@@ -17,6 +21,10 @@ interface ITabContext {
 export const TabContext = createContext<ITabContext>({
     tabs: [],
     setTabs: () => {},
+    filteredTabs: [],
+    setFilteredTabs: () => {},
+    searchTerm: "",
+    setSearchTerm: () => {},
     tabCount: 0,
     setTabCount: () => {},
     selectedTabs: [],
@@ -33,6 +41,8 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
     children,
 }) => {
     const [tabs, setTabs] = useState<chrome.tabs.Tab[]>([]);
+    const [filteredTabs, setFilteredTabs] = useState<chrome.tabs.Tab[]>([]);
+    const [searchTerm, setSearchTerm] = useState<string>("");
     const [tabCount, setTabCount] = useState<number>(0);
     const [selectedTabs, setSelectedTabs] = useState<number[]>([]);
     const [isGroupActionBarVisible, setIsGroupActionBarVisible] =
@@ -42,6 +52,7 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
         chrome.tabs.query({}, (tabs: chrome.tabs.Tab[]) => {
             setTabCount(tabs.length);
             setTabs(tabs);
+            setFilteredTabs(tabs);
         });
 
         /**
@@ -92,6 +103,10 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
             value={{
                 tabs,
                 setTabs,
+                filteredTabs,
+                setFilteredTabs,
+                searchTerm,
+                setSearchTerm,
                 tabCount,
                 setTabCount,
                 selectedTabs,
