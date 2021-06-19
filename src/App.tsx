@@ -4,6 +4,7 @@ import "./App.css";
 import { GroupActionBar } from "./components/GroupActionBar";
 import { TabHeader } from "./components/TabHeader";
 import { TabList } from "./components/TabList";
+import { TabSearchInput } from "./components/TabSearchInput";
 import { useTabContext } from "./contexts/TabContext";
 
 const App: React.FC = () => {
@@ -24,7 +25,7 @@ const App: React.FC = () => {
         groupHighlightedTabs(selectedTabs);
     };
 
-    const onInputChanged = (event: any) => {
+    const onInputChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
 
@@ -68,14 +69,11 @@ const App: React.FC = () => {
     return (
         <div className="App">
             <TabHeader />
-            <div className="search-wrapper">
-                <input
-                    onChange={onInputChanged}
-                    className="search"
-                    type="text"
-                    placeholder="What tab are you looking for?"
-                />
-            </div>
+            <TabSearchInput
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                onInputChanged={onInputChanged}
+            />
             <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
                 <Droppable droppableId="tab-tabs" key="tab-list">
                     {(provided) => (

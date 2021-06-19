@@ -85,11 +85,13 @@ export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
             {renderFavicon(tab)}
             <h4>{Helper.truncate(tab.title!, 35)}</h4>
             <div className="actions">
-                <ToggleAudioBtn
-                    tab={tab}
-                    isMuted={isMuted}
-                    setIsMuted={setIsMuted}
-                />
+                {tab.audible && (
+                    <ToggleAudioBtn
+                        tab={tab}
+                        isMuted={isMuted}
+                        setIsMuted={setIsMuted}
+                    />
+                )}
                 <CloseTabBtn tab={tab} />
             </div>
         </li>

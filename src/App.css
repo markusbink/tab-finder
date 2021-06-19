@@ -140,6 +140,7 @@ ul {
 
 .search-wrapper {
     padding: 10px;
+    position: relative;
 }
 
 input.search {
@@ -154,6 +155,25 @@ input.search {
 
 input.search::placeholder {
     color: var(--dark-grey);
+}
+
+.search-wrapper span.clear-icon {
+    position: absolute;
+    display: inline-block;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    line-height: 1;
+    padding: 0;
+    margin: 0;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.search-wrapper span.clear-icon svg {
+    width: 100%;
+    height: 100%;
 }
 
 .tab-list {

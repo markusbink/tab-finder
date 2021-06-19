@@ -16,6 +16,7 @@ export const TabList: React.FC<TabListProps> = ({ tabs, provided }) => {
         // Sort tabs alphabetically based on source url
         // Persist state through chrome.storage API
         // Add X to search input to clear current search
+        // Show audio icon only when tab is actually playing audio
         <ul
             {...provided.droppableProps}
             ref={provided.innerRef}
