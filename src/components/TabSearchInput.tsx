@@ -12,12 +12,17 @@ export const TabSearchInput: React.FC<TabSearchInputProps> = ({
     searchTerm,
     setSearchTerm,
 }) => {
+    const inputRef = React.useRef<HTMLInputElement>(null);
+
     React.useEffect(() => {
+        // Make input focusable when popup opens
+        inputRef?.current?.focus();
+
         document.addEventListener("keydown", (e: KeyboardEvent) => {
             if (e.key == "Escape") {
                 // Prevent popup from closing
                 e.preventDefault();
-
+                // Clear input
                 setSearchTerm("");
             }
         });
@@ -26,6 +31,7 @@ export const TabSearchInput: React.FC<TabSearchInputProps> = ({
     return (
         <div className="search-wrapper">
             <input
+                ref={inputRef}
                 onChange={onInputChanged}
                 className="search"
                 type="text"
