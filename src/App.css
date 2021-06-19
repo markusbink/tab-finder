@@ -151,6 +151,10 @@ input.search {
     border: 0;
     outline: none;
     width: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 input.search::placeholder {

@@ -3,13 +3,13 @@
   "name": "Tab-Finder",
   "description": "A simple browser extension to help you manage open tabs.",
   "version": "1.0.0",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "icons": {
     "16": "logo16.png",
     "48": "logo48.png",
     "128": "logo128.png"
   },
-  "browser_action": {
+  "action": {
     "default_popup": "index.html",
     "default_title": "Open Tab-Finder",
     "default_icon": {
@@ -19,7 +19,7 @@
     }
   },
   "background": {
-    "scripts": ["background.js"]
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
@@ -30,13 +30,17 @@
     }
   ],
   "web_accessible_resources": [
-    "fonts/Inter-Light.woff",
-    "fonts/Inter-Medium.woff",
-    "fonts/Inter-Bold.woff",
-    "fonts/Inter-Light.woff2",
-    "fonts/Inter-Medium.woff2",
-    "fonts/Inter-Bold.woff2"
+    {
+      "resources": [
+        "fonts/Inter-Light.woff",
+        "fonts/Inter-Medium.woff",
+        "fonts/Inter-Bold.woff",
+        "fonts/Inter-Light.woff2",
+        "fonts/Inter-Medium.woff2",
+        "fonts/Inter-Bold.woff2"
+      ],
+      "matches": ["<all_urls>"]
+    }
   ],
-  "permissions": ["tabs"],
-  "content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='; object-src 'self'"
+  "permissions": ["tabs"]
 }
