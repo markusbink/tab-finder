@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import * as React from "react";
 
 type Dispatch<A> = (value: A) => void;
 type SetStateAction<S> = S | ((prevState: S) => S);
@@ -18,7 +18,7 @@ interface ITabContext {
     setIsGroupActionBarVisible: (val: boolean) => void;
 }
 
-export const TabContext = createContext<ITabContext>({
+export const TabContext = React.createContext<ITabContext>({
     tabs: [],
     setTabs: () => {},
     filteredTabs: [],
@@ -40,20 +40,23 @@ interface TabContextProviderProps {
 export const TabContextProvider: React.FC<TabContextProviderProps> = ({
     children,
 }) => {
-    const [tabs, setTabs] = useState<chrome.tabs.Tab[]>([]);
-    const [filteredTabs, setFilteredTabs] = useState<chrome.tabs.Tab[]>([]);
-    const [searchTerm, setSearchTerm] = useState<string>("");
-    const [tabCount, setTabCount] = useState<number>(0);
-    const [selectedTabs, setSelectedTabs] = useState<number[]>([]);
+    const [tabs, setTabs] = React.useState<chrome.tabs.Tab[]>([]);
+    const [filteredTabs, setFilteredTabs] = React.useState<chrome.tabs.Tab[]>([]);
+    const [searchTerm, setSearchTerm] = React.useState<string>("");
+    const [tabCount, setTabCount] = React.useState<number>(0);
+    const [selectedTabs, setSelectedTabs] = React.useState<number[]>([]);
     const [isGroupActionBarVisible, setIsGroupActionBarVisible] =
-        useState<boolean>(false);
+        React.useState<boolean>(false);
 
-    useEffect(() => {
-        chrome.tabs.query({}, (tabs: chrome.tabs.Tab[]) => {
-            setTabCount(tabs.length);
-            setTabs(tabs);
-            setFilteredTabs(tabs);
-        });
+    React.useEffect(() => {
+
+        (async() => {
+            const currentTabs: chrome.tabs.Tab[] = await chrome.tabs.query({});
+            setTabCount(currentTabs.length);
+            setTabs(currentTabs);
+        })();
+       
+        
 
         /**
          * Temporary workaround for secondary monitors on MacOS where redraws don't happen
@@ -119,4 +122,4 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
     );
 };
 
-export const useTabContext = (): ITabContext => useContext(TabContext);
+export const useTabContext = (): ITabContext => React.useContext(TabContext);

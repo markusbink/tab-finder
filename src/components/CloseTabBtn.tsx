@@ -17,22 +17,22 @@ export const CloseTabBtn: React.FC<CloseTabBtnProps> = ({ tab }) => {
         e.stopPropagation();
         // Remove tab from browser
         await chrome.tabs.remove(tabId);
+        
         // Update UI in extension popup
-        await chrome.tabs.query({}, (tabs) => {
-            setTabs(tabs.filter((tab) => tab.id !== tabId));
-            setTabCount(tabs.filter((tab) => tab.id !== tabId).length);
+        const tabs = await chrome.tabs.query({});
 
-            // Remove filtering if no more tabs match filter criterion
-            if (!searchTerm) {
-                return;
-            }
-            const filteredTabs = Helper.filterTabsByTerm(tabs, searchTerm);
-            console.log(filteredTabs);
+        setTabs(tabs.filter((tab) => tab.id !== tabId));
+        setTabCount(tabs.filter((tab) => tab.id !== tabId).length);
 
-            if (filteredTabs.length === 0) {
-                setSearchTerm("");
-            }
-        });
+        // Remove filtering if no more tabs match filter criterion
+        if (!searchTerm) {
+            return;
+        }
+        const filteredTabs = Helper.filterTabsByTerm(tabs, searchTerm);
+
+        if (filteredTabs.length === 0) {
+            setSearchTerm("");
+        }
     };
 
     return (
