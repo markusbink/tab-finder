@@ -6,8 +6,6 @@ type SetStateAction<S> = S | ((prevState: S) => S);
 interface ITabContext {
     tabs: chrome.tabs.Tab[];
     setTabs: Dispatch<SetStateAction<chrome.tabs.Tab[]>>;
-    filteredTabs: chrome.tabs.Tab[];
-    setFilteredTabs: Dispatch<SetStateAction<chrome.tabs.Tab[]>>;
     searchTerm: string;
     setSearchTerm: (term: string) => void;
     tabCount: number;
@@ -21,8 +19,6 @@ interface ITabContext {
 export const TabContext = React.createContext<ITabContext>({
     tabs: [],
     setTabs: () => {},
-    filteredTabs: [],
-    setFilteredTabs: () => {},
     searchTerm: "",
     setSearchTerm: () => {},
     tabCount: 0,
@@ -41,7 +37,6 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
     children,
 }) => {
     const [tabs, setTabs] = React.useState<chrome.tabs.Tab[]>([]);
-    const [filteredTabs, setFilteredTabs] = React.useState<chrome.tabs.Tab[]>([]);
     const [searchTerm, setSearchTerm] = React.useState<string>("");
     const [tabCount, setTabCount] = React.useState<number>(0);
     const [selectedTabs, setSelectedTabs] = React.useState<number[]>([]);
@@ -106,8 +101,6 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
             value={{
                 tabs,
                 setTabs,
-                filteredTabs,
-                setFilteredTabs,
                 searchTerm,
                 setSearchTerm,
                 tabCount,

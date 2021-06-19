@@ -4,7 +4,7 @@ import { useTabContext } from "../contexts/TabContext";
 
 export const TabSearchInput: React.FC = ({}) => {
     const inputRef = React.useRef<HTMLInputElement>(null);
-    const { searchTerm, setSearchTerm, tabs, setFilteredTabs } =
+    const { searchTerm, setSearchTerm } =
         useTabContext();
 
     React.useEffect(() => {
@@ -17,6 +17,8 @@ export const TabSearchInput: React.FC = ({}) => {
                 e.preventDefault();
                 // Clear input
                 setSearchTerm("");
+                // Defocus input
+                inputRef?.current?.blur();
             }
         });
     }, []);
