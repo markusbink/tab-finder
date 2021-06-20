@@ -54,10 +54,6 @@ body {
   font-style: normal;
 }
 
-ul {
-  padding: 0;
-}
-
 .App {
   text-align: center;
   width: 350px;
@@ -68,7 +64,7 @@ ul {
 }
 
 .header {
-  padding: 5px 10px;
+  padding: 15px 10px 5px 10px;
   text-align: left;
   background-color: var(--black);
   color: var(--light-grey);

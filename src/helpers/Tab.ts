@@ -19,6 +19,10 @@ class Tab {
     async getTabByIndex(index: number) {
         return await chrome.tabs.query({ index: index });
     }
+
+    async update(id: number, properties: chrome.tabs.UpdateProperties) {
+        return await chrome.tabs.update(id, properties);
+    }
 }
 
 export default new Tab();

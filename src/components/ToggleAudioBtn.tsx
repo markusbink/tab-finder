@@ -1,6 +1,7 @@
 import React from "react";
 import { SpeakerOff } from "../assets/icons/SpeakerOff";
 import { SpeakerOn } from "../assets/icons/SpeakerOn";
+import Tab from "../helpers/Tab";
 
 interface ToggleAudioBtnProps {
     tab: chrome.tabs.Tab;
@@ -20,7 +21,7 @@ export const ToggleAudioBtn: React.FC<ToggleAudioBtnProps> = ({
         e.stopPropagation();
         chrome.tabs.get(tabId, async (tab) => {
             const muted = !tab.mutedInfo?.muted;
-            await chrome.tabs.update(tabId, { muted });
+            await Tab.update(tab.id!, {muted});
             setIsMuted(muted);
         });
     };
