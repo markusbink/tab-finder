@@ -1,7 +1,8 @@
 import * as React from "react";
 import { TabItem } from "./TabItem";
-import { DragDropContext, Draggable, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { useTabContext } from "../contexts/TabContext";
+import Tab from "../helpers/Tab";
 
 interface TabListProps {
     tabs: chrome.tabs.Tab[];
@@ -38,23 +39,16 @@ export const TabList: React.FC<TabListProps> = ({ tabs }) => {
         setTabs(items);
 
         // Change order of tabs based on Drag and Drop change
-        const changedTabs = await chrome.tabs.query({ index: result.source.index });
+        const changedTabs = await Tab.getTabByIndex(result.source.index );
         if (!changedTabs) {
             return;
         }
 
         const tabId: number = changedTabs[0].id!;
-        chrome.tabs.move(tabId, { index: result.destination?.index! });
+        Tab.move(tabId, result.destination?.index!);
     };
     
     return (
-        // Make tab groups lay on top of one another like a deck of cards
-        // Add differenct colours for different groups
-        // Make a range selection for groups
-        // Make groups unselectable
-        // Sort tabs alphabetically based on source url
-        // Persist state through chrome.storage API
-
         <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
         <Droppable droppableId="tab-tabs" key="tab-list">
             {(provided) => (
@@ -73,8 +67,5 @@ export const TabList: React.FC<TabListProps> = ({ tabs }) => {
             )}
         </Droppable>
     </DragDropContext>
-
-
-        
     );
 };

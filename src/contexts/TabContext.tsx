@@ -1,4 +1,5 @@
 import * as React from "react";
+import Tab from "../helpers/Tab";
 
 interface ITabContext {
     tabs: chrome.tabs.Tab[];
@@ -37,7 +38,7 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
     React.useEffect(() => {
 
         (async() => {
-            const currentTabs: chrome.tabs.Tab[] = await chrome.tabs.query({});
+            const currentTabs: chrome.tabs.Tab[] = await Tab.getTabs();
             setTabCount(currentTabs.length);
             setTabs(currentTabs);
         })();

@@ -2,6 +2,7 @@ import React from "react";
 import { Close } from "../assets/icons/Close";
 import { useTabContext } from "../contexts/TabContext";
 import Helper from "../helpers/Helper";
+import Tab from "../helpers/Tab";
 
 interface CloseTabBtnProps {
     tab: chrome.tabs.Tab;
@@ -16,10 +17,10 @@ export const CloseTabBtn: React.FC<CloseTabBtnProps> = ({ tab }) => {
     ): Promise<void> => {
         e.stopPropagation();
         // Remove tab from browser
-        await chrome.tabs.remove(tabId);
+        await Tab.closeTabById(tabId);
         
         // Update UI in extension popup
-        const tabs = await chrome.tabs.query({});
+        const tabs = await Tab.getTabs();
 
         setTabs(tabs.filter((tab) => tab.id !== tabId));
         setTabCount(tabs.filter((tab) => tab.id !== tabId).length);
