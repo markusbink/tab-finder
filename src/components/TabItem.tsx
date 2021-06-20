@@ -13,13 +13,7 @@ interface TabItemProps {
 
 export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
     const [isMuted, setIsMuted] = React.useState<boolean>(false);
-    const [isSelected, setIsSelected] = React.useState<boolean>(false);
-    const {
-        selectedTabs,
-        setSelectedTabs,
-        setIsGroupActionBarVisible,
-        isGroupActionBarVisible,
-    } = useTabContext();
+    const [isSelected, _setIsSelected] = React.useState<boolean>(false);
 
     // Initially check whether a tab is muted or not
     React.useEffect(() => {
@@ -29,37 +23,9 @@ export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
         });
     }, [tab.id, tab.groupId]);
 
-    // Deselect all tab items once a group action has been triggered
-    React.useEffect(() => {
-        if (!isGroupActionBarVisible) {
-            setIsSelected(false);
-        }
-    }, [isGroupActionBarVisible]);
-
-    // Select and highlight the currently clicked tab
-    const selectTab = (tabId: number) => {
-        setIsSelected((prevIsSelected) => !prevIsSelected);
-
-        let updatedTabs: number[] = [];
-        if (selectedTabs.includes(tabId)) {
-            updatedTabs = selectedTabs.filter((id) => id !== tabId);
-        } else {
-            updatedTabs = [...selectedTabs, tabId];
-        }
-        setSelectedTabs(updatedTabs);
-        updatedTabs.length > 1
-            ? setIsGroupActionBarVisible(true)
-            : setIsGroupActionBarVisible(false);
-    };
-
     const onTabClicked = (
-        e: React.MouseEvent<HTMLLIElement, MouseEvent>,
         tabId: number
     ) => {
-        if (e.metaKey) {
-            selectTab(tabId);
-            return;
-        }
         chrome.tabs.get(tabId, (tab) => {
             Tab.goToTab(tab.index);
         });
@@ -78,7 +44,7 @@ export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
-            onClick={(e) => onTabClicked(e, tab.id!)}
+            onClick={() => onTabClicked(tab.id!)}
             className={`tab-item ${isSelected && "selected"} ${
                 tab.groupId !== -1 && "grouped"
             }`}>
