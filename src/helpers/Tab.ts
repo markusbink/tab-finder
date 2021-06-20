@@ -4,8 +4,8 @@ class Tab {
         chrome.tabs.highlight({ tabs: tabId });
     }
 
-    move(tabId: number, newTabPosition: number):void {
-        chrome.tabs.move(tabId, { index: newTabPosition });
+    async move(tabId: number, newTabPosition: number) {
+        await chrome.tabs.move(tabId, { index: newTabPosition });
     }
 
     async closeTabById(id: number) {

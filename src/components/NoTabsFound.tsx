@@ -1,14 +1,36 @@
 import * as React from "react";
-import {Error} from "../assets/icons/Error";
+import styled from "styled-components";
+import { Error } from "../assets/icons/Error";
 
 export const NoTabsFound: React.FC = () => {
-    return (
+  return (
+    <Wrapper className="no-tabs-found">
+      <Error />
+      <Title>Oops...</Title>
+      <Description>No tabs match your search term.</Description>
+    </Wrapper>
+  );
+};
 
-        <div className="no-tabs-found">
-            <Error/>
-            <h4>Oops...</h4>
-            <p>No tabs match your search term.</p>
-        </div>
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100%;
+`;
 
-    )
-}
+const Title = styled.h4`
+  margin-top: 20px;
+  font-size: 25px;
+  color: var(--light-grey);
+`;
+
+const Description = styled.p`
+  margin-top: 10px;
+  font-size: 16px;
+  max-width: 160px;
+  color: var(--light-grey);
+  opacity: 0.7;
+  font-weight: 400;
+`;

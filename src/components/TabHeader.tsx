@@ -1,41 +1,47 @@
 import * as React from "react";
+import styled from "styled-components";
+import { TabFinderIcon } from "../assets/icons/TabFinderIcon";
 import { useTabContext } from "../contexts/TabContext";
 
 export const TabHeader: React.FC = () => {
-    const { tabCount } = useTabContext();
+  const { tabCount } = useTabContext();
 
-    return (
-        <div className="header">
-            <div className="logo">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="192"
-                    height="192"
-                    fill="#000000"
-                    viewBox="0 0 256 256">
-                    <rect width="256" height="256" fill="none"></rect>
-                    <rect
-                        x="32.00781"
-                        y="80.00005"
-                        width="160"
-                        height="128"
-                        rx="8"
-                        strokeWidth="16"
-                        stroke="#000000"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        fill="none"></rect>
-                    <path
-                        d="M64.00781,48.00005h152a8,8,0,0,1,8,8V176"
-                        fill="none"
-                        stroke="#000000"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="16"></path>
-                </svg>
-                <h2>TabFinder</h2>
-                <span className="tab-count">{tabCount}</span>
-            </div>
-        </div>
-    );
+  return (
+    <Header>
+      <LogoWrapper>
+        <TabFinderIcon />
+        <Title>TabFinder</Title>
+        <TabCount>{tabCount}</TabCount>
+      </LogoWrapper>
+    </Header>
+  );
 };
+
+const Header = styled.header`
+  padding: 15px 10px 5px 10px;
+  text-align: left;
+  background-color: var(--black);
+  color: var(--light-grey);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const LogoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Title = styled.h2`
+  color: var(--light-grey);
+  line-height: 1.5;
+`;
+
+const TabCount = styled.span`
+  font-weight: 800;
+  font-size: 12px;
+  color: var(--green);
+  margin-left: 7px;
+  padding-left: 7px;
+  border-left: 2px solid var(--light-grey);
+`;
