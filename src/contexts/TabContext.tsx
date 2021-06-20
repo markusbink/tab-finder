@@ -1,19 +1,14 @@
 import * as React from "react";
 
-type Dispatch<A> = (value: A) => void;
-type SetStateAction<S> = S | ((prevState: S) => S);
-
 interface ITabContext {
     tabs: chrome.tabs.Tab[];
-    setTabs: Dispatch<SetStateAction<chrome.tabs.Tab[]>>;
+    setTabs: React.Dispatch<React.SetStateAction<chrome.tabs.Tab[]>>;
     searchTerm: string;
     setSearchTerm: (term: string) => void;
     tabCount: number;
     setTabCount: (count: number) => void;
     selectedTabs: number[];
     setSelectedTabs: (tabIds: number[]) => void;
-    isGroupActionBarVisible: boolean;
-    setIsGroupActionBarVisible: (val: boolean) => void;
 }
 
 export const TabContext = React.createContext<ITabContext>({
@@ -25,8 +20,6 @@ export const TabContext = React.createContext<ITabContext>({
     setTabCount: () => {},
     selectedTabs: [],
     setSelectedTabs: () => {},
-    isGroupActionBarVisible: false,
-    setIsGroupActionBarVisible: () => {},
 });
 
 interface TabContextProviderProps {
@@ -40,8 +33,6 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
     const [searchTerm, setSearchTerm] = React.useState<string>("");
     const [tabCount, setTabCount] = React.useState<number>(0);
     const [selectedTabs, setSelectedTabs] = React.useState<number[]>([]);
-    const [isGroupActionBarVisible, setIsGroupActionBarVisible] =
-        React.useState<boolean>(false);
 
     React.useEffect(() => {
 
@@ -51,8 +42,6 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
             setTabs(currentTabs);
         })();
        
-        
-
         /**
          * Temporary workaround for secondary monitors on MacOS where redraws don't happen
          * @See https://bugs.chromium.org/p/chromium/issues/detail?id=971701
@@ -107,8 +96,6 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
                 setTabCount,
                 selectedTabs,
                 setSelectedTabs,
-                isGroupActionBarVisible,
-                setIsGroupActionBarVisible,
             }}>
             {children}
         </TabContext.Provider>

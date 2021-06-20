@@ -2,7 +2,6 @@ import * as React from "react";
 import Helper from "../helpers/Helper";
 import Tab from "../helpers/Tab";
 import { DraggableProvided } from "react-beautiful-dnd";
-import { useTabContext } from "../contexts/TabContext";
 import { CloseTabBtn } from "./CloseTabBtn";
 import { ToggleAudioBtn } from "./ToggleAudioBtn";
 
