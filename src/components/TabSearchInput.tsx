@@ -72,7 +72,7 @@ const SearchInput = styled.input`
   }
 
   ::placeholder {
-    color: var(--dark-grey);
+    color: var(--medium-grey);
   }
 `;
 
