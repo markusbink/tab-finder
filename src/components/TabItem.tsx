@@ -5,23 +5,15 @@ import { DraggableProvided } from "react-beautiful-dnd";
 import { CloseTabBtn } from "./CloseTabBtn";
 import { ToggleAudioBtn } from "./ToggleAudioBtn";
 import styled from "styled-components";
+import { TogglePinBtn } from "./TogglePinBtn";
 
 interface TabItemProps {
   tab: chrome.tabs.Tab;
-  provided: DraggableProvided;
+  provided?: DraggableProvided;
 }
 
 export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
-  const [isMuted, setIsMuted] = React.useState<boolean>(false);
   const [isSelected, _setIsSelected] = React.useState<boolean>(false);
-
-  // Initially check whether a tab is muted or not
-  React.useEffect(() => {
-    chrome.tabs.get(tab.id!, async (tab) => {
-      const muted = tab?.mutedInfo?.muted;
-      setIsMuted(() => !!muted);
-    });
-  }, [tab.id, tab.groupId]);
 
   const onTabClicked = (tabId: number) => {
     chrome.tabs.get(tabId, (tab) => {
@@ -39,17 +31,17 @@ export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
 
   return (
     <TabItemWrapper
-      {...provided.draggableProps}
-      {...provided.dragHandleProps}
-      ref={provided.innerRef}
+      {...provided?.draggableProps}
+      {...provided?.dragHandleProps}
+      ref={provided?.innerRef}
+      draggable={false}
       onClick={() => onTabClicked(tab.id!)}
     >
       {renderFavicon(tab)}
       <TabTitle>{Helper.truncate(tab.title!, 30)}</TabTitle>
       <TabActionsWrapper>
-        {tab.audible && (
-          <ToggleAudioBtn tab={tab} isMuted={isMuted} setIsMuted={setIsMuted} />
-        )}
+        <TogglePinBtn tab={tab} />
+        {tab.audible && <ToggleAudioBtn tab={tab} />}
         <CloseTabBtn tab={tab} />
       </TabActionsWrapper>
     </TabItemWrapper>

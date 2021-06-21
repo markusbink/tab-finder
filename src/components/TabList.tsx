@@ -55,13 +55,17 @@ export const TabList: React.FC<TabListProps> = ({ tabs }) => {
       <Droppable droppableId="tab-tabs" key="tab-list">
         {(provided) => (
           <TabListWrapper {...provided.droppableProps} ref={provided.innerRef}>
-            {tabs.map((tab: chrome.tabs.Tab, index: number) => (
-              <Draggable key={tab.id} draggableId={tab.id + ""} index={index}>
-                {(provided) => (
-                  <TabItem provided={provided} key={tab.id} tab={tab} />
-                )}
-              </Draggable>
-            ))}
+            {tabs.map((tab: chrome.tabs.Tab, index: number) =>
+              tab.pinned ? (
+                <TabItem key={tab.id} tab={tab} />
+              ) : (
+                <Draggable key={tab.id} draggableId={tab.id + ""} index={index}>
+                  {(provided) => (
+                    <TabItem provided={provided} key={tab.id} tab={tab} />
+                  )}
+                </Draggable>
+              )
+            )}
           </TabListWrapper>
         )}
       </Droppable>

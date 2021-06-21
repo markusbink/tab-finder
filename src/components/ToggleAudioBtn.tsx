@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import styled from "styled-components";
 import { SpeakerOff } from "../assets/icons/SpeakerOff";
 import { SpeakerOn } from "../assets/icons/SpeakerOn";
@@ -6,15 +6,19 @@ import Tab from "../helpers/Tab";
 
 interface ToggleAudioBtnProps {
   tab: chrome.tabs.Tab;
-  isMuted: boolean;
-  setIsMuted: (isMuted: boolean) => void;
 }
 
-export const ToggleAudioBtn: React.FC<ToggleAudioBtnProps> = ({
-  tab,
-  isMuted,
-  setIsMuted,
-}) => {
+export const ToggleAudioBtn: React.FC<ToggleAudioBtnProps> = ({ tab }) => {
+  const [isMuted, setIsMuted] = React.useState<boolean>(false);
+
+  // Initially check whether a tab is muted or not
+  React.useEffect(() => {
+    chrome.tabs.get(tab.id!, async (tab) => {
+      const muted = tab?.mutedInfo?.muted;
+      setIsMuted(() => !!muted);
+    });
+  }, [tab.id, tab.groupId]);
+
   const toggleAudio = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     tabId: number
