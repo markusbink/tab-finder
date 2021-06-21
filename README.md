@@ -1,6 +1,6 @@
 # Tab-Finder
 
-![Logo](https://github.com/markusbink/tab-finder/blob/assets/tabfinder-logo.png)
+![Logo](https://github.com/markusbink/tab-finder/blob/assets/tabfinder-logo.png | width=100)
 
 Your one stop solution to manage your tab chaos.
 
@@ -28,6 +28,7 @@ Tab-Finder tries to combat this issue by providing a simple browser extension th
 - Select multiple tabs to group them
 - Perform actions on multiple tabs at once
 - Add Keyboard-Shorcuts
+- Extend extension to Firefox
 
 ### Feature Requests
 
