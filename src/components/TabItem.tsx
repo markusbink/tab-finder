@@ -45,7 +45,7 @@ export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
       onClick={() => onTabClicked(tab.id!)}
     >
       {renderFavicon(tab)}
-      <TabTitle>{Helper.truncate(tab.title!, 35)}</TabTitle>
+      <TabTitle>{Helper.truncate(tab.title!, 30)}</TabTitle>
       <TabActionsWrapper>
         {tab.audible && (
           <ToggleAudioBtn tab={tab} isMuted={isMuted} setIsMuted={setIsMuted} />
