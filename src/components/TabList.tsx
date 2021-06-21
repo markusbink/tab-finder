@@ -87,7 +87,11 @@ const TabListWrapper = styled.ul`
     bottom: 0;
     height: 30px;
     width: 100%;
-    background-image: linear-gradient(0deg, var(--black), transparent);
+    background-image: linear-gradient(
+      0deg,
+      ${({ theme }) => theme.background},
+      transparent
+    );
     pointer-events: none;
   }
 

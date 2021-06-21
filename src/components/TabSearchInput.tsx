@@ -52,8 +52,8 @@ const SearchWrapper = styled.div`
 `;
 
 const SearchInput = styled.input`
-  background: var(--dark-black);
-  color: var(--light-grey);
+  background: ${({ theme }) => theme.input.background};
+  color: ${({ theme }) => theme.text};
   border-radius: 6px;
   padding: 15px;
   border: 0;
@@ -64,15 +64,15 @@ const SearchInput = styled.input`
   border: 1px solid transparent;
 
   &:hover {
-    border: 1px solid var(--dark-grey);
+    border: 1px solid ${({ theme }) => theme.input.hover};
   }
 
   &:focus {
-    border: 1px solid var(--green);
+    border: 1px solid ${({ theme }) => theme.input.active};
   }
 
   ::placeholder {
-    color: var(--medium-grey);
+    color: ${({ theme }) => theme.input.placholder};
   }
 `;
 

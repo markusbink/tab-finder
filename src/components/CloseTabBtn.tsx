@@ -1,9 +1,9 @@
 import React from "react";
-import styled from "styled-components";
 import { Close } from "../assets/icons/Close";
 import { useTabContext } from "../contexts/TabContext";
 import Helper from "../helpers/Helper";
 import Tab from "../helpers/Tab";
+import { TabActionBtn } from "./TabActionBtn";
 
 interface CloseTabBtnProps {
   tab: chrome.tabs.Tab;
@@ -38,31 +38,8 @@ export const CloseTabBtn: React.FC<CloseTabBtnProps> = ({ tab }) => {
   };
 
   return (
-    <TabAction onClick={async (e) => await closeTab(e, tab.id!)}>
+    <TabActionBtn onClick={async (e) => await closeTab(e, tab.id!)}>
       <Close />
-    </TabAction>
+    </TabActionBtn>
   );
 };
-
-export const TabAction = styled.div`
-  padding: 5px;
-  background: var(--light-grey);
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  opacity: 0.75;
-  height: 30px;
-  width: 30px;
-  display: none;
-
-  &:hover {
-    opacity: 1;
-  }
-
-  &:not(:last-child) {
-    margin-right: 5px;
-  }
-`;

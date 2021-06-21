@@ -23,14 +23,14 @@ const Wrapper = styled.div`
 const Title = styled.h4`
   margin-top: 20px;
   font-size: 25px;
-  color: var(--light-grey);
+  color: ${({ theme }) => theme.text};
 `;
 
 const Description = styled.p`
   margin-top: 10px;
   font-size: 16px;
   max-width: 160px;
-  color: var(--light-grey);
+  color: ${({ theme }) => theme.text};
   opacity: 0.7;
   font-weight: 400;
 `;

@@ -2,11 +2,11 @@ import * as React from "react";
 import Helper from "../helpers/Helper";
 import Tab from "../helpers/Tab";
 import { DraggableProvided } from "react-beautiful-dnd";
-import { CloseTabBtn } from "./CloseTabBtn";
 import { ToggleAudioBtn } from "./ToggleAudioBtn";
 import styled from "styled-components";
 import { TogglePinBtn } from "./TogglePinBtn";
-import { TabAction as CloseTabAction } from "./CloseTabBtn";
+import { TabAction } from "./TabActionBtn";
+import { CloseTabBtn } from "./CloseTabBtn";
 
 interface TabItemProps {
   tab: chrome.tabs.Tab;
@@ -54,8 +54,12 @@ const TabActionsWrapper = styled.div`
   top: 0;
   right: 0;
   height: 100%;
-  background-image: linear-gradient(270deg, var(--dark-grey), 85%, transparent);
-  background-image: linear-gradient(270deg, var(--dark-grey), 85%, transparent);
+  background-image: linear-gradient(
+    270deg,
+    ${({ theme }) => theme.tab.background},
+    85%,
+    transparent
+  );
   display: flex;
   align-items: center;
   padding: 0 10px 0 30px;
@@ -64,22 +68,22 @@ const TabActionsWrapper = styled.div`
 const TabItemWrapper = styled.li`
   display: flex;
   align-items: center;
-  background: var(--dark-grey);
-  color: var(--light-grey);
+  background: ${({ theme }) => theme.tab.background};
+  color: ${({ theme }) => theme.text};
   margin-bottom: 10px;
   text-align: left;
   padding: 10px;
   border-radius: 6px;
   transition: border 0.2s ease-in-out;
   position: relative;
-  border: 2px solid var(--dark-grey);
+  border: 2px solid ${({ theme }) => theme.tab.background};
   user-select: none;
 
   &:hover {
-    border: 2px solid var(--light-grey);
+    border: 2px solid ${({ theme }) => theme.tab.hover};
   }
 
-  &:hover ${CloseTabAction} {
+  &:hover ${TabAction} {
     display: inline-block;
   }
 `;

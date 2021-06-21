@@ -1,4 +1,7 @@
-@font-face {
+import { createGlobalStyle } from "styled-components";
+
+export const GlobalStyle = createGlobalStyle`
+  @font-face {
   font-family: "Inter";
   src: url("chrome-extension://__MSG_@@extension_id__/fonts/Inter-Medium.woff2")
       format("woff2"),
@@ -31,7 +34,8 @@
   font-display: swap;
 }
 
-:root {
+
+  :root {
   --dark-black: #07080c;
   --black: #15181e;
   --dark-grey: #292b36;
@@ -59,12 +63,4 @@ body {
     Helvetica, Arial, sans-serif;
   font-style: normal;
 }
-
-.App {
-  text-align: center;
-  width: 350px;
-  height: 400px;
-  background: var(--black);
-  display: flex;
-  flex-direction: column;
-}
+`;

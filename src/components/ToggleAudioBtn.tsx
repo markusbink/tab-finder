@@ -1,8 +1,8 @@
 import * as React from "react";
-import styled from "styled-components";
 import { SpeakerOff } from "../assets/icons/SpeakerOff";
 import { SpeakerOn } from "../assets/icons/SpeakerOn";
 import Tab from "../helpers/Tab";
+import { TabActionBtn } from "./TabActionBtn";
 
 interface ToggleAudioBtnProps {
   tab: chrome.tabs.Tab;
@@ -32,30 +32,8 @@ export const ToggleAudioBtn: React.FC<ToggleAudioBtnProps> = ({ tab }) => {
   };
 
   return (
-    <TabAction onClick={(e) => toggleAudio(e, tab.id!)}>
+    <TabActionBtn onClick={(e) => toggleAudio(e, tab.id!)}>
       {isMuted ?? !tab.audible ? <SpeakerOff /> : <SpeakerOn />}
-    </TabAction>
+    </TabActionBtn>
   );
 };
-
-const TabAction = styled.div`
-  padding: 5px;
-  background: var(--light-grey);
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  opacity: 0.75;
-  height: 30px;
-  width: 30px;
-
-  &:hover {
-    opacity: 1;
-  }
-
-  &:not(:last-child) {
-    margin-right: 5px;
-  }
-`;

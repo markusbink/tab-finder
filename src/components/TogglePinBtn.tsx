@@ -1,9 +1,9 @@
 import * as React from "react";
-import styled from "styled-components";
 import { Pin } from "../assets/icons/Pin";
 import { UnPin } from "../assets/icons/UnPin";
 import { useTabContext } from "../contexts/TabContext";
 import Tab from "../helpers/Tab";
+import { TabActionBtn } from "./TabActionBtn";
 
 interface TogglePinBtnProps {
   tab: chrome.tabs.Tab;
@@ -31,30 +31,8 @@ export const TogglePinBtn: React.FC<TogglePinBtnProps> = ({ tab }) => {
   };
 
   return (
-    <TabAction onClick={(e) => togglePin(e, tab.id!)}>
+    <TabActionBtn onClick={(e) => togglePin(e, tab.id!)}>
       {isPinned ? <UnPin /> : <Pin />}
-    </TabAction>
+    </TabActionBtn>
   );
 };
-
-const TabAction = styled.div`
-  padding: 5px;
-  background: var(--light-grey);
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  opacity: 0.75;
-  height: 30px;
-  width: 30px;
-
-  &:hover {
-    opacity: 1;
-  }
-
-  &:not(:last-child) {
-    margin-right: 5px;
-  }
-`;

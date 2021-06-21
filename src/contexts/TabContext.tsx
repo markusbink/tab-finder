@@ -10,6 +10,8 @@ interface ITabContext {
   setTabCount: (count: number) => void;
   selectedTabs: number[];
   setSelectedTabs: (tabIds: number[]) => void;
+  theme: string;
+  setTheme: (theme: string) => void;
 }
 
 export const TabContext = React.createContext<ITabContext>({
@@ -21,6 +23,8 @@ export const TabContext = React.createContext<ITabContext>({
   setTabCount: () => {},
   selectedTabs: [],
   setSelectedTabs: () => {},
+  theme: "dark",
+  setTheme: () => {},
 });
 
 interface TabContextProviderProps {
@@ -34,9 +38,19 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
   const [searchTerm, setSearchTerm] = React.useState<string>("");
   const [tabCount, setTabCount] = React.useState<number>(0);
   const [selectedTabs, setSelectedTabs] = React.useState<number[]>([]);
+  const [theme, setTheme] = React.useState<string>("");
 
   React.useEffect(() => {
     (async () => {
+      // Set theme
+      chrome.storage.sync.get(["theme"], async (result) => {
+        if (!result.theme) {
+          await chrome.storage.sync.set({ theme: "dark" });
+        }
+        setTheme(result.theme);
+      });
+
+      // Get tabs
       const currentTabs: chrome.tabs.Tab[] = await Tab.getTabs();
       setTabCount(currentTabs.length);
       setTabs(currentTabs);
@@ -96,6 +110,8 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
         setTabCount,
         selectedTabs,
         setSelectedTabs,
+        theme,
+        setTheme,
       }}
     >
       {children}

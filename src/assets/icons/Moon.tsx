@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 
-export const Pin: React.FC = () => {
+export const Moon: React.FC = () => {
   return (
     <Icon
       xmlns="http://www.w3.org/2000/svg"
@@ -16,7 +16,7 @@ export const Pin: React.FC = () => {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="16"
-        d="M128 176L128 240"
+        d="M216 112L216 64"
       ></path>
       <path
         fill="none"
@@ -24,7 +24,7 @@ export const Pin: React.FC = () => {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="16"
-        d="M64 40L192 40"
+        d="M240 88L192 88"
       ></path>
       <path
         fill="none"
@@ -32,7 +32,7 @@ export const Pin: React.FC = () => {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="16"
-        d="M40 176L216 176"
+        d="M168 24L168 56"
       ></path>
       <path
         fill="none"
@@ -40,7 +40,7 @@ export const Pin: React.FC = () => {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="16"
-        d="M56 176L80 40"
+        d="M184 40L152 40"
       ></path>
       <path
         fill="none"
@@ -48,7 +48,7 @@ export const Pin: React.FC = () => {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="16"
-        d="M176 40L200 176"
+        d="M216.662 152.65A92.032 92.032 0 01103.35 39.338h.003A92.014 92.014 0 10216.66 152.647z"
       ></path>
     </Icon>
   );
