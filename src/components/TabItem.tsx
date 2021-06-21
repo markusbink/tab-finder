@@ -6,6 +6,7 @@ import { CloseTabBtn } from "./CloseTabBtn";
 import { ToggleAudioBtn } from "./ToggleAudioBtn";
 import styled from "styled-components";
 import { TogglePinBtn } from "./TogglePinBtn";
+import { TabAction as CloseTabAction } from "./CloseTabBtn";
 
 interface TabItemProps {
   tab: chrome.tabs.Tab;
@@ -38,7 +39,7 @@ export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
       onClick={() => onTabClicked(tab.id!)}
     >
       {renderFavicon(tab)}
-      <TabTitle>{Helper.truncate(tab.title!, 30)}</TabTitle>
+      <TabTitle>{Helper.truncate(tab.title!, 37)}</TabTitle>
       <TabActionsWrapper>
         <TogglePinBtn tab={tab} />
         {tab.audible && <ToggleAudioBtn tab={tab} />}
@@ -47,6 +48,18 @@ export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
     </TabItemWrapper>
   );
 };
+
+const TabActionsWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background-image: linear-gradient(270deg, var(--dark-grey), 85%, transparent);
+  background-image: linear-gradient(270deg, var(--dark-grey), 85%, transparent);
+  display: flex;
+  align-items: center;
+  padding: 0 10px 0 30px;
+`;
 
 const TabItemWrapper = styled.li`
   display: flex;
@@ -65,6 +78,10 @@ const TabItemWrapper = styled.li`
   &:hover {
     border: 2px solid var(--light-grey);
   }
+
+  &:hover ${CloseTabAction} {
+    display: inline-block;
+  }
 `;
 
 const TabTitle = styled.h4`
@@ -82,16 +99,4 @@ const TabFaviconPlaceholder = styled(TabFavicon)`
   background: #ddd;
   border-radius: 6p;
   display: inline-block;
-`;
-
-const TabActionsWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
-  background-image: linear-gradient(270deg, var(--dark-grey), 85%, transparent);
-  background-image: linear-gradient(270deg, var(--dark-grey), 85%, transparent);
-  display: flex;
-  align-items: center;
-  padding: 0 10px 0 30px;
 `;

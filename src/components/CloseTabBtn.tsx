@@ -44,7 +44,7 @@ export const CloseTabBtn: React.FC<CloseTabBtnProps> = ({ tab }) => {
   );
 };
 
-const TabAction = styled.div`
+export const TabAction = styled.div`
   padding: 5px;
   background: var(--light-grey);
   border-radius: 4px;
@@ -56,6 +56,7 @@ const TabAction = styled.div`
   opacity: 0.75;
   height: 30px;
   width: 30px;
+  display: none;
 
   &:hover {
     opacity: 1;
