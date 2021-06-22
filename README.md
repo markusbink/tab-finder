@@ -28,6 +28,7 @@ Tab-Finder tries to combat this issue by providing a simple browser extension th
 - Select multiple tabs to group them
 - Perform actions on multiple tabs at once
 - Add Keyboard-Shorcuts
+- Extend extension to Firefox
 
 ### Feature Requests
 
