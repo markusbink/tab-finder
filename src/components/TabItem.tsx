@@ -78,6 +78,7 @@ const TabItemWrapper = styled.li`
   position: relative;
   border: 2px solid ${({ theme }) => theme.tab.background};
   user-select: none;
+  overflow: hidden;
 
   &:hover {
     border: 2px solid ${({ theme }) => theme.tab.hover};
