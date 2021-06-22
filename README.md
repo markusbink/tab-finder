@@ -1,6 +1,6 @@
 # Tab-Finder
 
-![Logo](https://github.com/markusbink/tab-finder/blob/assets/tabfinder-logo.png)
+<img src="https://github.com/markusbink/tab-finder/blob/assets/tabfinder-logo.png" width="400"/>
 
 Your one stop solution to manage your tab chaos.
 
