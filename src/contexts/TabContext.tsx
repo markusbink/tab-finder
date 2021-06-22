@@ -119,4 +119,8 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
   );
 };
 
-export const useTabContext = (): ITabContext => React.useContext(TabContext);
+export const useTabContext = (): ITabContext => {
+  const context = React.useContext(TabContext);
+  if (!context) throw new Error("TabContext must be used with TabProvider!");
+  return context;
+};
