@@ -39,7 +39,7 @@ export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
       onClick={() => onTabClicked(tab.id!)}
     >
       {renderFavicon(tab)}
-      <TabTitle>{Helper.truncate(tab.title!, 37)}</TabTitle>
+      <TabTitle>{Helper.truncate(tab.title!, 30)}</TabTitle>
       <TabActionsWrapper>
         <TogglePinBtn tab={tab} />
         {tab.audible && <ToggleAudioBtn tab={tab} />}
