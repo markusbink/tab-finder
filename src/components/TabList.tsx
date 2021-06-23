@@ -6,16 +6,35 @@ import {
   Droppable,
   DropResult,
 } from "react-beautiful-dnd";
-import { useTabContext } from "../contexts/TabContext";
+import { ITab, useTabContext } from "../contexts/TabContext";
 import Tab from "../helpers/Tab";
 import styled from "styled-components";
 
 interface TabListProps {
-  tabs: chrome.tabs.Tab[];
+  tabs: ITab[];
 }
 
 export const TabList: React.FC<TabListProps> = ({ tabs }) => {
   const { setTabs } = useTabContext();
+
+  React.useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      switch (e.key) {
+        case "Escape":
+          setTabs(
+            tabs.map((tab) => {
+              tab.isSelected = false;
+              return tab;
+            })
+          );
+
+          break;
+
+        default:
+          return;
+      }
+    });
+  }, []);
 
   // Function to change the order of a list based on previous and new location
   const reorder = (

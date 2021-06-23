@@ -2,16 +2,20 @@ import * as React from "react";
 import Tab from "../helpers/Tab";
 
 interface ITabContext {
-  tabs: chrome.tabs.Tab[];
-  setTabs: React.Dispatch<React.SetStateAction<chrome.tabs.Tab[]>>;
+  tabs: ITab[];
+  setTabs: React.Dispatch<React.SetStateAction<ITab[]>>;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   tabCount: number;
   setTabCount: (count: number) => void;
-  selectedTabs: number[];
-  setSelectedTabs: (tabIds: number[]) => void;
+  lastSelected: number;
+  setLastSelected: (index: number) => void;
   theme: string;
   setTheme: (theme: string) => void;
+}
+
+export interface ITab extends chrome.tabs.Tab {
+  isSelected?: boolean;
 }
 
 export const TabContext = React.createContext<ITabContext>({
@@ -21,8 +25,8 @@ export const TabContext = React.createContext<ITabContext>({
   setSearchTerm: () => {},
   tabCount: 0,
   setTabCount: () => {},
-  selectedTabs: [],
-  setSelectedTabs: () => {},
+  lastSelected: -1,
+  setLastSelected: () => {},
   theme: "dark",
   setTheme: () => {},
 });
@@ -34,10 +38,10 @@ interface TabContextProviderProps {
 export const TabContextProvider: React.FC<TabContextProviderProps> = ({
   children,
 }) => {
-  const [tabs, setTabs] = React.useState<chrome.tabs.Tab[]>([]);
+  const [tabs, setTabs] = React.useState<ITab[]>([]);
   const [searchTerm, setSearchTerm] = React.useState<string>("");
   const [tabCount, setTabCount] = React.useState<number>(0);
-  const [selectedTabs, setSelectedTabs] = React.useState<number[]>([]);
+  const [lastSelected, setLastSelected] = React.useState<number>(-1);
   const [theme, setTheme] = React.useState<string>("");
 
   React.useEffect(() => {
@@ -51,7 +55,8 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
       });
 
       // Get tabs
-      const currentTabs: chrome.tabs.Tab[] = await Tab.getTabs();
+      const currentTabs: ITab[] = await Tab.getTabs();
+
       setTabCount(currentTabs.length);
       setTabs(currentTabs);
     })();
@@ -108,8 +113,8 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
         setSearchTerm,
         tabCount,
         setTabCount,
-        selectedTabs,
-        setSelectedTabs,
+        lastSelected,
+        setLastSelected,
         theme,
         setTheme,
       }}
