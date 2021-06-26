@@ -1,35 +1,34 @@
 import * as React from "react";
 import styled from "styled-components";
+import { useContextMenu } from "../hooks/useContextMenu";
 import { ContextMenuItem } from "./ContextMenuItem";
 
 interface ContextMenuProps {
-  isVisible: boolean;
-  position: {
-    x: number;
-    y: number;
-  };
+  target: any;
 }
 
-export const ContextMenu: React.FC<ContextMenuProps> = ({
-  isVisible,
-  position,
-}) => {
+export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
+  const { isVisible, position } = useContextMenu(target);
+
   const actions = [
     {
+      icon: "",
       label: "Close tabs",
-      action: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      callback: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         console.log("Tab closed");
       },
     },
     {
+      icon: "",
       label: "Group tabs",
-      action: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      callback: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         console.log("Tabs grouped");
       },
     },
     {
+      icon: "",
       label: "Pin tabs",
-      action: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      callback: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         console.log("Tabs pinned");
       },
     },
@@ -38,7 +37,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   return (
     <ContextMenuWrapper isVisible={isVisible} position={position}>
       {actions.map((action) => (
-        <ContextMenuItem label={action.label} action={action.action} />
+        <ContextMenuItem label={action.label} callback={action.callback} />
       ))}
     </ContextMenuWrapper>
   );

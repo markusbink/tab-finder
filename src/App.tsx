@@ -1,20 +1,17 @@
 import * as React from "react";
 import styled, { ThemeProvider } from "styled-components";
-import { ContextMenu } from "./components/ContextMenu";
 import { NoTabsFound } from "./components/NoTabsFound";
 import { TabHeader } from "./components/TabHeader";
 import { TabList } from "./components/TabList";
 import { TabSearchInput } from "./components/TabSearchInput";
 import { useTabContext } from "./contexts/TabContext";
 import Helper from "./helpers/Helper";
-import { useContextMenu } from "./hooks/useContextMenu";
 import { GlobalStyle } from "./styles/Global";
 import { darkTheme, lightTheme } from "./styles/themes";
 const App: React.FC = () => {
   const { tabs, searchTerm } = useTabContext();
   const filteredTabs = Helper.filterTabsByTerm(tabs, searchTerm);
   const { theme } = useTabContext();
-  const { xPos, yPos, isVisible, onContextMenu } = useContextMenu();
 
   return (
     <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
@@ -23,11 +20,10 @@ const App: React.FC = () => {
         <TabHeader />
         <TabSearchInput />
         {filteredTabs.length > 0 ? (
-          <TabList tabs={filteredTabs} onContextMenu={onContextMenu} />
+          <TabList tabs={filteredTabs} />
         ) : (
           <NoTabsFound />
         )}
-        <ContextMenu isVisible={isVisible} position={{ x: xPos, y: yPos }} />
       </AppWrapper>
     </ThemeProvider>
   );

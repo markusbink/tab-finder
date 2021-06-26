@@ -13,14 +13,9 @@ import { useContextMenu } from "../hooks/useContextMenu";
 interface TabItemProps {
   tab: ITab;
   provided?: DraggableProvided;
-  onContextMenu: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
 }
 
-export const TabItem: React.FC<TabItemProps> = ({
-  tab,
-  provided,
-  onContextMenu,
-}) => {
+export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
   const { tabs, setTabs, lastSelected, setLastSelected } = useTabContext();
 
   const onTabClicked = (
@@ -75,9 +70,6 @@ export const TabItem: React.FC<TabItemProps> = ({
       // isSelected={selectedTabs.includes(tab.index)}
       ref={provided?.innerRef}
       draggable={false}
-      onContextMenu={(e) => {
-        onContextMenu(e);
-      }}
       onClick={(e) => onTabClicked(e, tab.index!)}
     >
       {renderFavicon(tab)}

@@ -9,14 +9,15 @@ import {
 import { ITab, useTabContext } from "../contexts/TabContext";
 import Tab from "../helpers/Tab";
 import styled from "styled-components";
+import { ContextMenu } from "./ContextMenu";
 
 interface TabListProps {
   tabs: ITab[];
-  onContextMenu: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
 }
 
-export const TabList: React.FC<TabListProps> = ({ tabs, onContextMenu }) => {
+export const TabList: React.FC<TabListProps> = ({ tabs }) => {
   const { setTabs } = useTabContext();
+  const tabListRef = React.useRef(null);
 
   React.useEffect(() => {
     document.addEventListener("keydown", (e) => {
@@ -70,21 +71,14 @@ export const TabList: React.FC<TabListProps> = ({ tabs, onContextMenu }) => {
   };
 
   return (
-    <>
+    <TabListWrapper ref={tabListRef}>
       <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
         <Droppable droppableId="tab-tabs" key="tab-list">
           {(provided) => (
-            <TabListWrapper
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
+            <ul {...provided.droppableProps} ref={provided.innerRef}>
               {tabs.map((tab: chrome.tabs.Tab, index: number) =>
                 tab.pinned ? (
-                  <TabItem
-                    key={tab.id}
-                    tab={tab}
-                    onContextMenu={onContextMenu}
-                  />
+                  <TabItem key={tab.id} tab={tab} />
                 ) : (
                   <Draggable
                     key={tab.id}
@@ -92,25 +86,21 @@ export const TabList: React.FC<TabListProps> = ({ tabs, onContextMenu }) => {
                     index={index}
                   >
                     {(provided) => (
-                      <TabItem
-                        provided={provided}
-                        key={tab.id}
-                        tab={tab}
-                        onContextMenu={onContextMenu}
-                      />
+                      <TabItem provided={provided} key={tab.id} tab={tab} />
                     )}
                   </Draggable>
                 )
               )}
-            </TabListWrapper>
+            </ul>
           )}
         </Droppable>
       </DragDropContext>
-    </>
+      <ContextMenu target={tabListRef} />
+    </TabListWrapper>
   );
 };
 
-const TabListWrapper = styled.ul`
+const TabListWrapper = styled.div`
   height: 100%;
   overflow-y: scroll;
   padding: 10px;
