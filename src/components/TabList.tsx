@@ -12,9 +12,10 @@ import styled from "styled-components";
 
 interface TabListProps {
   tabs: ITab[];
+  onContextMenu: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
 }
 
-export const TabList: React.FC<TabListProps> = ({ tabs }) => {
+export const TabList: React.FC<TabListProps> = ({ tabs, onContextMenu }) => {
   const { setTabs } = useTabContext();
 
   React.useEffect(() => {
@@ -27,7 +28,6 @@ export const TabList: React.FC<TabListProps> = ({ tabs }) => {
               return tab;
             })
           );
-
           break;
 
         default:
@@ -70,25 +70,43 @@ export const TabList: React.FC<TabListProps> = ({ tabs }) => {
   };
 
   return (
-    <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-      <Droppable droppableId="tab-tabs" key="tab-list">
-        {(provided) => (
-          <TabListWrapper {...provided.droppableProps} ref={provided.innerRef}>
-            {tabs.map((tab: chrome.tabs.Tab, index: number) =>
-              tab.pinned ? (
-                <TabItem key={tab.id} tab={tab} />
-              ) : (
-                <Draggable key={tab.id} draggableId={tab.id + ""} index={index}>
-                  {(provided) => (
-                    <TabItem provided={provided} key={tab.id} tab={tab} />
-                  )}
-                </Draggable>
-              )
-            )}
-          </TabListWrapper>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <>
+      <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
+        <Droppable droppableId="tab-tabs" key="tab-list">
+          {(provided) => (
+            <TabListWrapper
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {tabs.map((tab: chrome.tabs.Tab, index: number) =>
+                tab.pinned ? (
+                  <TabItem
+                    key={tab.id}
+                    tab={tab}
+                    onContextMenu={onContextMenu}
+                  />
+                ) : (
+                  <Draggable
+                    key={tab.id}
+                    draggableId={tab.id + ""}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <TabItem
+                        provided={provided}
+                        key={tab.id}
+                        tab={tab}
+                        onContextMenu={onContextMenu}
+                      />
+                    )}
+                  </Draggable>
+                )
+              )}
+            </TabListWrapper>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </>
   );
 };
 

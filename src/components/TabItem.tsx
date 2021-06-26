@@ -8,13 +8,19 @@ import { TogglePinBtn } from "./TogglePinBtn";
 import { TabAction } from "./TabActionBtn";
 import { CloseTabBtn } from "./CloseTabBtn";
 import { ITab, useTabContext } from "../contexts/TabContext";
+import { useContextMenu } from "../hooks/useContextMenu";
 
 interface TabItemProps {
   tab: ITab;
   provided?: DraggableProvided;
+  onContextMenu: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
 }
 
-export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
+export const TabItem: React.FC<TabItemProps> = ({
+  tab,
+  provided,
+  onContextMenu,
+}) => {
   const { tabs, setTabs, lastSelected, setLastSelected } = useTabContext();
 
   const onTabClicked = (
@@ -69,6 +75,9 @@ export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
       // isSelected={selectedTabs.includes(tab.index)}
       ref={provided?.innerRef}
       draggable={false}
+      onContextMenu={(e) => {
+        onContextMenu(e);
+      }}
       onClick={(e) => onTabClicked(e, tab.index!)}
     >
       {renderFavicon(tab)}
@@ -96,9 +105,11 @@ const TabActionsWrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 0 10px 0 30px;
+  border-radius: 6px;
 `;
 
 const TabItemWrapper = styled.li<{ isSelected: boolean }>`
+  position: relative;
   display: flex;
   align-items: center;
   background: ${({ theme }) => theme.tab.background};
@@ -109,14 +120,13 @@ const TabItemWrapper = styled.li<{ isSelected: boolean }>`
   border-radius: 6px;
   transition: border 0.2s ease-in-out;
   position: relative;
-  border: 2px solid ${({ theme }) => theme.tab.background};
   border: 2px solid
     ${({ isSelected }) =>
       isSelected
         ? ({ theme }) => theme.success
         : ({ theme }) => theme.tab.background};
   user-select: none;
-  overflow: hidden;
+  outline: none;
 
   &:hover {
     border: 2px solid
@@ -125,6 +135,10 @@ const TabItemWrapper = styled.li<{ isSelected: boolean }>`
           ? ({ theme }) => theme.success
           : ({ theme }) => theme.tab.hover};
     user-select: none;
+  }
+
+  &:focus {
+    border: 2px solid ${({ theme }) => theme.success};
   }
 
   &:hover ${TabAction} {
