@@ -15,6 +15,7 @@ export const ContextMenuItem: React.FC<ContextMenuItemProps> = ({
 };
 
 const MenuItem = styled.div`
+  text-align: left;
   color: ${({ theme }) => theme.text};
   cursor: pointer;
   padding: 10px;

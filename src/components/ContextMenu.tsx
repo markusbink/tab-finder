@@ -62,4 +62,5 @@ const ContextMenuWrapper = styled.div<{
   overflow: hidden;
   display: ${({ isVisible }) => (isVisible ? "inline-block" : "none")};
   width: 180px;
+  z-index: 20;
 `;
