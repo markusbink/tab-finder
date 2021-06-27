@@ -8,6 +8,7 @@ import { useTabContext } from "./contexts/TabContext";
 import Helper from "./helpers/Helper";
 import { GlobalStyle } from "./styles/Global";
 import { darkTheme, lightTheme } from "./styles/themes";
+import * as Constants from "./constants";
 const App: React.FC = () => {
   const { tabs, searchTerm } = useTabContext();
   const filteredTabs = Helper.filterTabsByTerm(tabs, searchTerm);
@@ -33,8 +34,8 @@ export default App;
 
 const AppWrapper = styled.div`
   text-align: center;
-  width: 350px;
-  height: 400px;
+  width: ${Constants.POPUP_WIDTH}px;
+  height: ${Constants.POPUP_HEIGHT}px;
   background: ${({ theme }) => theme.background};
   display: flex;
   flex-direction: column;
