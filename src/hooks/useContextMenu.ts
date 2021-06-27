@@ -1,6 +1,7 @@
 import * as React from "react";
+import * as Constants from "../constants";
 
-export const useContextMenu = (target: any) => {
+export const useContextMenu = (target: any, contextMenuRef: any) => {
   const [xPos, setXPos] = React.useState<number>(0);
   const [yPos, setYPos] = React.useState<number>(0);
   const [isVisible, setIsVisible] = React.useState<boolean>(false);
@@ -10,12 +11,12 @@ export const useContextMenu = (target: any) => {
     document.addEventListener("click", () => {
       setIsVisible(false);
     });
-    // Close Context Menu
     document.addEventListener("keydown", (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setIsVisible(false);
       }
     });
+
     // Open Context Menu when wrapper gets right clicked
     target.current.addEventListener("contextmenu", (e: MouseEvent) => {
       onContextMenu(e);
@@ -25,9 +26,39 @@ export const useContextMenu = (target: any) => {
   const onContextMenu = (e: MouseEvent) => {
     e.preventDefault();
 
-    setXPos(e.pageX);
-    setYPos(e.pageY);
+    const contextMenuWidth = contextMenuRef?.current?.clientWidth;
+    const contextMenuHeight = contextMenuRef?.current?.clientHeight;
+
+    const position = getMenuPosition(
+      e.clientX,
+      e.clientY,
+      contextMenuWidth,
+      contextMenuHeight
+    );
+
+    setXPos(position.x);
+    setYPos(position.y);
+
     setIsVisible(true);
   };
   return { position: { x: xPos, y: yPos }, isVisible, onContextMenu };
+};
+
+const getMenuPosition = (
+  mouseX: number,
+  mouseY: number,
+  menuWidth: number,
+  menuHeight: number
+) => {
+  let ctxMenuXPos: number = mouseX;
+  let ctxMenuYPos: number = mouseY;
+
+  if (mouseX + menuWidth > Constants.POPUP_WIDTH) {
+    ctxMenuXPos = Constants.POPUP_WIDTH - menuWidth;
+  }
+
+  if (mouseY + menuHeight > Constants.POPUP_HEIGHT) {
+    ctxMenuYPos = Constants.POPUP_HEIGHT - menuHeight;
+  }
+  return { x: ctxMenuXPos, y: ctxMenuYPos };
 };

@@ -8,7 +8,8 @@ interface ContextMenuProps {
 }
 
 export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
-  const { isVisible, position } = useContextMenu(target);
+  const contextMenuRef = React.useRef(null);
+  const { isVisible, position } = useContextMenu(target, contextMenuRef);
 
   const actions = [
     {
@@ -35,7 +36,11 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
   ];
 
   return (
-    <ContextMenuWrapper isVisible={isVisible} position={position}>
+    <ContextMenuWrapper
+      ref={contextMenuRef}
+      isVisible={isVisible}
+      position={position}
+    >
       {actions.map((action) => (
         <ContextMenuItem label={action.label} callback={action.callback} />
       ))}

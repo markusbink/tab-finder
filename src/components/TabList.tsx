@@ -21,18 +21,13 @@ export const TabList: React.FC<TabListProps> = ({ tabs }) => {
 
   React.useEffect(() => {
     document.addEventListener("keydown", (e) => {
-      switch (e.key) {
-        case "Escape":
-          setTabs(
-            tabs.map((tab) => {
-              tab.isSelected = false;
-              return tab;
-            })
-          );
-          break;
-
-        default:
-          return;
+      if (e.key === "Escape") {
+        setTabs(
+          tabs.map((tab) => {
+            tab.isSelected = false;
+            return tab;
+          })
+        );
       }
     });
   }, []);
