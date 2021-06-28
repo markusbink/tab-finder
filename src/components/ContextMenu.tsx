@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useTabContext } from "../contexts/TabContext";
 import Tab from "../helpers/Tab";
 import { useContextMenu } from "../hooks/useContextMenu";
@@ -88,6 +88,20 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
   );
 };
 
+const bounce = keyframes`
+    0% {
+      transform: scale(0.9);
+      opacity: 0.5;
+    }
+    80% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  `;
+
 const ContextMenuWrapper = styled.div<{
   isVisible: boolean;
   position: { x: number; y: number };
@@ -103,4 +117,5 @@ const ContextMenuWrapper = styled.div<{
   display: ${({ isVisible }) => (isVisible ? "inline-block" : "none")};
   width: 180px;
   z-index: 20;
+  animation: ${bounce} 0.15s cubic-bezier(0, 0, 0.38, 0.9);
 `;
