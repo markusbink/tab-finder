@@ -1,5 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
+import { useTabContext } from "../contexts/TabContext";
+import Tab from "../helpers/Tab";
 import { useContextMenu } from "../hooks/useContextMenu";
 import { ContextMenuItem } from "./ContextMenuItem";
 
@@ -9,28 +11,66 @@ interface ContextMenuProps {
 
 export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
   const contextMenuRef = React.useRef(null);
+  const { tabs, setTabs } = useTabContext();
   const { isVisible, position } = useContextMenu(target, contextMenuRef);
+
+  React.useLayoutEffect(() => {}, []);
 
   const actions = [
     {
       icon: "",
       label: "Close tabs",
       callback: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        console.log("Tab closed");
+        // Remove tabs
+        tabs.map((tab) => {
+          if (!tab.isSelected) {
+            return;
+          }
+          Tab.closeTabById(tab.id!);
+        });
+        // Update state
+        setTabs(tabs.filter((tab) => !tab.isSelected));
       },
     },
     {
       icon: "",
       label: "Group tabs",
-      callback: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        console.log("Tabs grouped");
+      callback: async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        const highlighedTabIds: number[] = tabs
+          .filter((tab) => tab.isSelected!)
+          .map((tab) => tab.id!);
+        await chrome.tabs.group({ tabIds: highlighedTabIds });
+
+        const updatedTabs = await Tab.getTabs();
+        setTabs(updatedTabs);
+      },
+    },
+    {
+      icon: "",
+      label: "Ungroup tabs",
+      callback: async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        const highlighedTabIds: number[] = tabs
+          .filter((tab) => tab.isSelected!)
+          .map((tab) => tab.id!);
+        await chrome.tabs.ungroup(highlighedTabIds);
+
+        const updatedTabs = await Tab.getTabs();
+        setTabs(updatedTabs);
       },
     },
     {
       icon: "",
       label: "Pin tabs",
-      callback: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        console.log("Tabs pinned");
+      callback: async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        tabs.map(async (tab) => {
+          // If tab is not pinned, pin it otherwise unpin it
+          if (!tab.isSelected) {
+            return;
+          }
+          await Tab.update(tab.id!, { pinned: !tab.pinned });
+        });
+        const updatedTabs = await Tab.getTabs();
+        setTabs(updatedTabs);
       },
     },
   ];

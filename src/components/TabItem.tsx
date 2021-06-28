@@ -8,7 +8,6 @@ import { TogglePinBtn } from "./TogglePinBtn";
 import { TabAction } from "./TabActionBtn";
 import { CloseTabBtn } from "./CloseTabBtn";
 import { ITab, useTabContext } from "../contexts/TabContext";
-import { useContextMenu } from "../hooks/useContextMenu";
 
 interface TabItemProps {
   tab: ITab;
@@ -67,7 +66,6 @@ export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
       {...provided?.draggableProps}
       {...provided?.dragHandleProps}
       isSelected={tab.isSelected!}
-      // isSelected={selectedTabs.includes(tab.index)}
       ref={provided?.innerRef}
       draggable={false}
       onClick={(e) => onTabClicked(e, tab.index!)}

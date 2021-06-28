@@ -17,7 +17,7 @@ export const ToggleAudioBtn: React.FC<ToggleAudioBtnProps> = ({ tab }) => {
       const muted = tab?.mutedInfo?.muted;
       setIsMuted(() => !!muted);
     });
-  }, [tab.id, tab.groupId]);
+  }, [tab.id]);
 
   const toggleAudio = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,

@@ -36,6 +36,9 @@ export const useContextMenu = (target: any, contextMenuRef: any) => {
       contextMenuHeight
     );
 
+    console.log("context-menu1", { contextMenuWidth, contextMenuHeight });
+    console.log("context-menu2", position);
+
     setXPos(position.x);
     setYPos(position.y);
 
