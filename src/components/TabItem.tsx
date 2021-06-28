@@ -108,7 +108,7 @@ const TabItemWrapper = styled.li<{ isSelected: boolean }>`
   text-align: left;
   padding: 10px;
   border-radius: 6px;
-  transition: border 0.2s ease-in-out;
+  transition: border 0.1s ease-in-out;
   position: relative;
   border: 2px solid
     ${({ isSelected }) =>
