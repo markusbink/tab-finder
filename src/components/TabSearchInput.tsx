@@ -1,11 +1,13 @@
 import * as React from "react";
-import styled from "styled-components";
-import { Clear } from "../assets/icons/Clear";
+import styled, { ThemeContext } from "styled-components";
+import { XCircle } from "phosphor-react";
 import { useTabContext } from "../contexts/TabContext";
+import { useTheme } from "../hooks/useTheme";
 
-export const TabSearchInput: React.FC = ({}) => {
+export const TabSearchInput: React.FC = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const { searchTerm, setSearchTerm } = useTabContext();
+  const theme = useTheme();
 
   React.useEffect(() => {
     // Make input focusable when popup opens
@@ -39,7 +41,7 @@ export const TabSearchInput: React.FC = ({}) => {
       />
       {searchTerm && (
         <ClearIcon onClick={() => setSearchTerm("")} className="clear-icon">
-          <Clear />
+          <XCircle size="100%" weight="fill" color={theme.action.background} />
         </ClearIcon>
       )}
     </SearchWrapper>

@@ -1,12 +1,12 @@
 import * as React from "react";
-import { Moon } from "../assets/icons/Moon";
-import { Sun } from "../assets/icons/Sun";
+import { MoonStars, Sun } from "phosphor-react";
 import { useTabContext } from "../contexts/TabContext";
-import { colors } from "../styles/themes";
 import { TabActionBtn } from "./TabActionBtn";
+import { useTheme } from "../hooks/useTheme";
 
 export const ToggleThemeBtn: React.FC = () => {
   const { theme, setTheme } = useTabContext();
+  const styledTheme = useTheme();
 
   const toggleTheme = () => {
     switch (theme) {
@@ -25,7 +25,11 @@ export const ToggleThemeBtn: React.FC = () => {
 
   return (
     <TabActionBtn background="transparent" onClick={() => toggleTheme()}>
-      {theme === "dark" ? <Sun /> : <Moon />}
+      {theme === "dark" ? (
+        <Sun size={32} color={styledTheme.text} />
+      ) : (
+        <MoonStars size={32} color={styledTheme.text} />
+      )}
     </TabActionBtn>
   );
 };

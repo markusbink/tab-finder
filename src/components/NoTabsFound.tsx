@@ -1,11 +1,14 @@
 import * as React from "react";
 import styled from "styled-components";
-import { Error } from "../assets/icons/Error";
+import { LightningSlash } from "phosphor-react";
+import { useTheme } from "../hooks/useTheme";
 
 export const NoTabsFound: React.FC = () => {
+  const theme = useTheme();
+
   return (
     <Wrapper className="no-tabs-found">
-      <Error />
+      <LightningSlash size={50} color={theme.danger} />
       <Title>Oops...</Title>
       <Description>No tabs match your search term.</Description>
     </Wrapper>

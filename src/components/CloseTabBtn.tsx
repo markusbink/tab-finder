@@ -1,9 +1,10 @@
 import React from "react";
-import { Close } from "../assets/icons/Close";
+import { XCircle } from "phosphor-react";
 import { useTabContext } from "../contexts/TabContext";
 import Helper from "../helpers/Helper";
 import Tab from "../helpers/Tab";
 import { TabActionBtn } from "./TabActionBtn";
+import { useTheme } from "../hooks/useTheme";
 
 interface CloseTabBtnProps {
   tab: chrome.tabs.Tab;
@@ -11,6 +12,7 @@ interface CloseTabBtnProps {
 
 export const CloseTabBtn: React.FC<CloseTabBtnProps> = ({ tab }) => {
   const { setTabs, setTabCount, searchTerm, setSearchTerm } = useTabContext();
+  const theme = useTheme();
 
   const closeTab = async (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -39,7 +41,7 @@ export const CloseTabBtn: React.FC<CloseTabBtnProps> = ({ tab }) => {
 
   return (
     <TabActionBtn onClick={async (e) => await closeTab(e, tab.id!)}>
-      <Close />
+      <XCircle size="100%" color={theme.action.icon} />
     </TabActionBtn>
   );
 };

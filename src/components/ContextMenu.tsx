@@ -4,6 +4,14 @@ import { useTabContext } from "../contexts/TabContext";
 import Tab from "../helpers/Tab";
 import { useContextMenu } from "../hooks/useContextMenu";
 import { ContextMenuItem } from "./ContextMenuItem";
+import * as Constants from "../constants";
+import {
+  FolderNotchMinus,
+  FolderNotchPlus,
+  PushPinSimple,
+  XCircle,
+} from "phosphor-react";
+import { useTheme } from "../hooks/useTheme";
 
 interface ContextMenuProps {
   target: any;
@@ -12,13 +20,14 @@ interface ContextMenuProps {
 export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
   const contextMenuRef = React.useRef(null);
   const { tabs, setTabs } = useTabContext();
+  const theme = useTheme();
   const { isVisible, position } = useContextMenu(target, contextMenuRef);
 
   React.useLayoutEffect(() => {}, []);
 
   const actions = [
     {
-      icon: "",
+      icon: <XCircle color={theme.text} size="100%" />,
       label: "Close tabs",
       callback: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         // Remove tabs
@@ -33,7 +42,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
       },
     },
     {
-      icon: "",
+      icon: <FolderNotchPlus color={theme.text} size="100%" />,
       label: "Group tabs",
       callback: async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         const highlighedTabIds: number[] = tabs
@@ -46,7 +55,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
       },
     },
     {
-      icon: "",
+      icon: <FolderNotchMinus color={theme.text} size="100%" />,
       label: "Ungroup tabs",
       callback: async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         const highlighedTabIds: number[] = tabs
@@ -59,7 +68,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
       },
     },
     {
-      icon: "",
+      icon: <PushPinSimple color={theme.text} size="100%" />,
       label: "Pin tabs",
       callback: async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         tabs.map(async (tab) => {
@@ -82,7 +91,11 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
       position={position}
     >
       {actions.map((action) => (
-        <ContextMenuItem label={action.label} callback={action.callback} />
+        <ContextMenuItem
+          icon={action.icon}
+          label={action.label}
+          callback={action.callback}
+        />
       ))}
     </ContextMenuWrapper>
   );
@@ -91,9 +104,9 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
 const bounce = keyframes`
     0% {
       transform: scale(0.9);
-      opacity: 0.5;
+      opacity: 0.75;
     }
-    80% {
+    40% {
       transform: scale(1.1);
     }
     100% {
@@ -115,7 +128,8 @@ const ContextMenuWrapper = styled.div<{
   border-radius: 6px;
   overflow: hidden;
   display: ${({ isVisible }) => (isVisible ? "inline-block" : "none")};
-  width: 180px;
+  width: ${Constants.CONTEXT_MENU_WIDTH}px;
   z-index: 20;
-  animation: ${bounce} 0.15s cubic-bezier(0, 0, 0.38, 0.9);
+  animation: ${bounce} 0.3s cubic-bezier(0.95, 0, 0.335, 1);
+  padding: 5px;
 `;

@@ -1,9 +1,9 @@
 import * as React from "react";
-import { Pin } from "../assets/icons/Pin";
-import { UnPin } from "../assets/icons/UnPin";
+import { PushPinSimple, PushPinSimpleSlash } from "phosphor-react";
 import { useTabContext } from "../contexts/TabContext";
 import Tab from "../helpers/Tab";
 import { TabActionBtn } from "./TabActionBtn";
+import { useTheme } from "../hooks/useTheme";
 
 interface TogglePinBtnProps {
   tab: chrome.tabs.Tab;
@@ -12,6 +12,7 @@ interface TogglePinBtnProps {
 export const TogglePinBtn: React.FC<TogglePinBtnProps> = ({ tab }) => {
   const [isPinned, setIsPinned] = React.useState(tab.pinned);
   const { setTabs } = useTabContext();
+  const theme = useTheme();
 
   const togglePin = async (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -32,7 +33,11 @@ export const TogglePinBtn: React.FC<TogglePinBtnProps> = ({ tab }) => {
 
   return (
     <TabActionBtn onClick={(e) => togglePin(e, tab.id!)}>
-      {isPinned ? <UnPin /> : <Pin />}
+      {isPinned ? (
+        <PushPinSimpleSlash size="100%" color={theme.action.icon} />
+      ) : (
+        <PushPinSimple size="100%" color={theme.action.icon} />
+      )}
     </TabActionBtn>
   );
 };

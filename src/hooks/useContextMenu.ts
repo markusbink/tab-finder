@@ -11,6 +11,8 @@ export const useContextMenu = (target: any, contextMenuRef: any) => {
     document.addEventListener("click", () => {
       setIsVisible(false);
     });
+
+    // Close Context Menu
     document.addEventListener("keydown", (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setIsVisible(false);
@@ -19,12 +21,14 @@ export const useContextMenu = (target: any, contextMenuRef: any) => {
 
     // Open Context Menu when wrapper gets right clicked
     target.current.addEventListener("contextmenu", (e: MouseEvent) => {
+      setIsVisible(false);
       onContextMenu(e);
     });
   }, []);
 
   const onContextMenu = (e: MouseEvent) => {
     e.preventDefault();
+    setIsVisible(true);
 
     const contextMenuWidth = contextMenuRef?.current?.clientWidth;
     const contextMenuHeight = contextMenuRef?.current?.clientHeight;
@@ -36,13 +40,8 @@ export const useContextMenu = (target: any, contextMenuRef: any) => {
       contextMenuHeight
     );
 
-    console.log("context-menu1", { contextMenuWidth, contextMenuHeight });
-    console.log("context-menu2", position);
-
     setXPos(position.x);
     setYPos(position.y);
-
-    setIsVisible(true);
   };
   return { position: { x: xPos, y: yPos }, isVisible, onContextMenu };
 };
@@ -53,15 +52,15 @@ const getMenuPosition = (
   menuWidth: number,
   menuHeight: number
 ) => {
-  let ctxMenuXPos: number = mouseX;
-  let ctxMenuYPos: number = mouseY;
+  let ctxMenuXPos: number = mouseX + 5;
+  let ctxMenuYPos: number = mouseY + 5;
 
   if (mouseX + menuWidth > Constants.POPUP_WIDTH) {
-    ctxMenuXPos = Constants.POPUP_WIDTH - menuWidth;
+    ctxMenuXPos = Constants.POPUP_WIDTH - menuWidth - 5;
   }
 
   if (mouseY + menuHeight > Constants.POPUP_HEIGHT) {
-    ctxMenuYPos = Constants.POPUP_HEIGHT - menuHeight;
+    ctxMenuYPos = Constants.POPUP_HEIGHT - menuHeight - 5;
   }
   return { x: ctxMenuXPos, y: ctxMenuYPos };
 };

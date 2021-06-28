@@ -1,8 +1,8 @@
 import * as React from "react";
-import { SpeakerOff } from "../assets/icons/SpeakerOff";
-import { SpeakerOn } from "../assets/icons/SpeakerOn";
+import { SpeakerHigh, SpeakerX } from "phosphor-react";
 import Tab from "../helpers/Tab";
 import { TabActionBtn } from "./TabActionBtn";
+import { useTheme } from "../hooks/useTheme";
 
 interface ToggleAudioBtnProps {
   tab: chrome.tabs.Tab;
@@ -10,6 +10,7 @@ interface ToggleAudioBtnProps {
 
 export const ToggleAudioBtn: React.FC<ToggleAudioBtnProps> = ({ tab }) => {
   const [isMuted, setIsMuted] = React.useState<boolean>(false);
+  const theme = useTheme();
 
   // Initially check whether a tab is muted or not
   React.useEffect(() => {
@@ -33,7 +34,11 @@ export const ToggleAudioBtn: React.FC<ToggleAudioBtnProps> = ({ tab }) => {
 
   return (
     <TabActionBtn onClick={(e) => toggleAudio(e, tab.id!)}>
-      {isMuted ?? !tab.audible ? <SpeakerOff /> : <SpeakerOn />}
+      {isMuted ?? !tab.audible ? (
+        <SpeakerX size="100%" color={theme.action.icon} />
+      ) : (
+        <SpeakerHigh size="100%" color={theme.action.icon} />
+      )}
     </TabActionBtn>
   );
 };

@@ -37,6 +37,10 @@ export const darkTheme = {
     text: colors.dark.lightGrey,
     hover: colors.dark.lightGrey,
   },
+  contextMenu: {
+    background: colors.dark.black,
+    hover: colors.dark.darkGrey,
+  },
 };
 
 export const lightTheme = {
@@ -51,12 +55,16 @@ export const lightTheme = {
     active: colors.success,
   },
   action: {
-    background: colors.light.darkGrey,
-    icon: colors.light.lightGrey,
+    background: colors.light.white,
+    icon: colors.light.darkGrey,
   },
   tab: {
     background: colors.light.mediumGrey,
     text: colors.light.black,
     hover: colors.light.darkGrey,
+  },
+  contextMenu: {
+    background: colors.light.white,
+    hover: colors.light.lightGrey,
   },
 };
