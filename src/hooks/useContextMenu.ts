@@ -20,16 +20,17 @@ export const useContextMenu = (target: any, contextMenuRef: any) => {
     });
 
     // Open Context Menu when wrapper gets right clicked
-    target.current.addEventListener("contextmenu", (e: MouseEvent) => {
+    target.current.addEventListener("contextmenu", (e: React.MouseEvent) => {
+      e.preventDefault();
       setIsVisible(false);
       onContextMenu(e);
     });
   }, []);
 
-  const onContextMenu = (e: MouseEvent) => {
-    e.preventDefault();
+  const onContextMenu = async (e: React.MouseEvent) => {
     setIsVisible(true);
 
+    // Caluclate and set position for context menu
     const contextMenuWidth = contextMenuRef?.current?.clientWidth;
     const contextMenuHeight = contextMenuRef?.current?.clientHeight;
 
@@ -43,7 +44,12 @@ export const useContextMenu = (target: any, contextMenuRef: any) => {
     setXPos(position.x);
     setYPos(position.y);
   };
-  return { position: { x: xPos, y: yPos }, isVisible, onContextMenu };
+  return {
+    position: { x: xPos, y: yPos },
+    isVisible,
+    setIsVisible,
+    onContextMenu,
+  };
 };
 
 const getMenuPosition = (

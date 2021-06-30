@@ -35,6 +35,9 @@ export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
     }
 
     if (e.shiftKey) {
+      if (lastSelected === -1) {
+        return;
+      }
       setTabs(
         tabs.map((tab, tabIndex) => {
           if (
@@ -50,6 +53,7 @@ export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
       );
       return;
     }
+
     Tab.goToTab(index);
   };
 

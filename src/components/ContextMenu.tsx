@@ -19,68 +19,74 @@ interface ContextMenuProps {
 
 export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
   const contextMenuRef = React.useRef(null);
-  const { tabs, setTabs } = useTabContext();
   const theme = useTheme();
+  const { tabs, setTabs } = useTabContext();
   const { isVisible, position } = useContextMenu(target, contextMenuRef);
 
-  React.useLayoutEffect(() => {}, []);
+  const onCloseTabs = async () => {
+    tabs.map((tab) => {
+      if (!tab.isSelected) {
+        return;
+      }
+      Tab.closeTabById(tab.id!);
+    });
+
+    const updatedTabs = await Tab.getTabs();
+    setTabs(updatedTabs);
+  };
+
+  const onGroupTabs = async () => {
+    const highlighedTabIds: number[] = tabs
+      .filter((tab) => tab.isSelected!)
+      .map((tab) => tab.id!);
+    await chrome.tabs.group({ tabIds: highlighedTabIds });
+
+    const updatedTabs = await Tab.getTabs();
+    setTabs(updatedTabs);
+  };
+
+  const onUngroupTabs = async () => {
+    const highlighedTabIds: number[] = tabs
+      .filter((tab) => tab.isSelected!)
+      .map((tab) => tab.id!);
+    await chrome.tabs.ungroup(highlighedTabIds);
+
+    const updatedTabs = await Tab.getTabs();
+    setTabs(updatedTabs);
+  };
+
+  const onPinTabs = async () => {
+    tabs.map(async (tab) => {
+      if (!tab.isSelected) {
+        return;
+      }
+      await Tab.update(tab.id!, { pinned: !tab.pinned });
+    });
+
+    const updatedTabs = await Tab.getTabs();
+    setTabs(updatedTabs);
+  };
 
   const actions = [
     {
       icon: <XCircle color={theme.text} size="100%" />,
       label: "Close tabs",
-      callback: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        // Remove tabs
-        tabs.map((tab) => {
-          if (!tab.isSelected) {
-            return;
-          }
-          Tab.closeTabById(tab.id!);
-        });
-        // Update state
-        setTabs(tabs.filter((tab) => !tab.isSelected));
-      },
+      callback: onCloseTabs,
     },
     {
       icon: <FolderNotchPlus color={theme.text} size="100%" />,
       label: "Group tabs",
-      callback: async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        const highlighedTabIds: number[] = tabs
-          .filter((tab) => tab.isSelected!)
-          .map((tab) => tab.id!);
-        await chrome.tabs.group({ tabIds: highlighedTabIds });
-
-        const updatedTabs = await Tab.getTabs();
-        setTabs(updatedTabs);
-      },
+      callback: onGroupTabs,
     },
     {
       icon: <FolderNotchMinus color={theme.text} size="100%" />,
       label: "Ungroup tabs",
-      callback: async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        const highlighedTabIds: number[] = tabs
-          .filter((tab) => tab.isSelected!)
-          .map((tab) => tab.id!);
-        await chrome.tabs.ungroup(highlighedTabIds);
-
-        const updatedTabs = await Tab.getTabs();
-        setTabs(updatedTabs);
-      },
+      callback: onUngroupTabs,
     },
     {
       icon: <PushPinSimple color={theme.text} size="100%" />,
       label: "Pin tabs",
-      callback: async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        tabs.map(async (tab) => {
-          // If tab is not pinned, pin it otherwise unpin it
-          if (!tab.isSelected) {
-            return;
-          }
-          await Tab.update(tab.id!, { pinned: !tab.pinned });
-        });
-        const updatedTabs = await Tab.getTabs();
-        setTabs(updatedTabs);
-      },
+      callback: onPinTabs,
     },
   ];
 

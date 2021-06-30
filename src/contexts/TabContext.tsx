@@ -104,6 +104,10 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
     }
   }, []);
 
+  React.useEffect(() => {
+    console.log(tabs);
+  }, [tabs]);
+
   return (
     <TabContext.Provider
       value={{
