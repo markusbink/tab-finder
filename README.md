@@ -21,12 +21,12 @@ Tab-Finder tries to combat this issue by providing a simple browser extension th
 - Pin a tab by clicking the pin icon
 - Toggle audio of tabs that play sound
 - Close tabs by clicking on the x icon
+- Perform actions on multiple tabs at once through a context menu (opens with right click)
 - Change theme of the Popup (currently supporting dark and light theme)
 
 ### Future Features
 
-- Select multiple tabs to group them
-- Perform actions on multiple tabs at once
+- Find/Select/Delete duplicate tabs
 - Add Keyboard-Shorcuts
 - Extend extension to Firefox
 
