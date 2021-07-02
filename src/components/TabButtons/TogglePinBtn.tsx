@@ -1,9 +1,9 @@
 import * as React from "react";
 import { PushPinSimple, PushPinSimpleSlash } from "phosphor-react";
-import { useTabContext } from "../contexts/TabContext";
-import Tab from "../helpers/Tab";
+import { useTheme } from "../../hooks/useTheme";
+import Tab from "../../helpers/Tab";
+import { useTabContext } from "../../contexts/TabContext";
 import { TabActionBtn } from "./TabActionBtn";
-import { useTheme } from "../hooks/useTheme";
 
 interface TogglePinBtnProps {
   tab: chrome.tabs.Tab;

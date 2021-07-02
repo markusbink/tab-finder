@@ -1,8 +1,8 @@
 import * as React from "react";
 import { SpeakerHigh, SpeakerX } from "phosphor-react";
-import Tab from "../helpers/Tab";
+import Tab from "../../helpers/Tab";
 import { TabActionBtn } from "./TabActionBtn";
-import { useTheme } from "../hooks/useTheme";
+import { useTheme } from "../../hooks/useTheme";
 
 interface ToggleAudioBtnProps {
   tab: chrome.tabs.Tab;

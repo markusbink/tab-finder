@@ -1,17 +1,18 @@
 import * as React from "react";
 import styled, { keyframes } from "styled-components";
-import { useTabContext } from "../contexts/TabContext";
-import Tab from "../helpers/Tab";
-import { useContextMenu } from "../hooks/useContextMenu";
 import { ContextMenuItem } from "./ContextMenuItem";
-import * as Constants from "../constants";
 import {
   FolderNotchMinus,
   FolderNotchPlus,
   PushPinSimple,
   XCircle,
 } from "phosphor-react";
-import { useTheme } from "../hooks/useTheme";
+import { useTheme } from "../../hooks/useTheme";
+import { useTabContext } from "../../contexts/TabContext";
+import Tab from "../../helpers/Tab";
+import { useContextMenu } from "../../hooks/useContextMenu";
+import * as Constants from "../../constants";
+import toast from "react-hot-toast";
 
 interface ContextMenuProps {
   target: any;
@@ -33,6 +34,10 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
 
     const updatedTabs = await Tab.getTabs();
     setTabs(updatedTabs);
+
+    toast.success("Closed tabs", {
+      position: "bottom-center",
+    });
   };
 
   const onGroupTabs = async () => {
@@ -43,6 +48,10 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
 
     const updatedTabs = await Tab.getTabs();
     setTabs(updatedTabs);
+
+    toast.success("Grouped tabs", {
+      position: "bottom-center",
+    });
   };
 
   const onUngroupTabs = async () => {
@@ -53,6 +62,10 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
 
     const updatedTabs = await Tab.getTabs();
     setTabs(updatedTabs);
+
+    toast.success("Ungrouped tabs", {
+      position: "bottom-center",
+    });
   };
 
   const onPinTabs = async () => {
@@ -65,6 +78,10 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
 
     const updatedTabs = await Tab.getTabs();
     setTabs(updatedTabs);
+
+    toast.success("Pinned tabs", {
+      position: "bottom-center",
+    });
   };
 
   const actions = [

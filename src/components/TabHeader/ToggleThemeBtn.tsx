@@ -1,8 +1,8 @@
 import * as React from "react";
 import { MoonStars, Sun } from "phosphor-react";
-import { useTabContext } from "../contexts/TabContext";
-import { TabActionBtn } from "./TabActionBtn";
-import { useTheme } from "../hooks/useTheme";
+import { useTabContext } from "../../contexts/TabContext";
+import { TabActionBtn } from "../TabButtons/TabActionBtn";
+import { useTheme } from "../../hooks/useTheme";
 
 export const ToggleThemeBtn: React.FC = () => {
   const { theme, setTheme } = useTabContext();

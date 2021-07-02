@@ -1,10 +1,10 @@
 import React from "react";
 import { XCircle } from "phosphor-react";
-import { useTabContext } from "../contexts/TabContext";
-import Helper from "../helpers/Helper";
-import Tab from "../helpers/Tab";
+import { useTabContext } from "../../contexts/TabContext";
+import Helper from "../../helpers/Helper";
+import Tab from "../../helpers/Tab";
 import { TabActionBtn } from "./TabActionBtn";
-import { useTheme } from "../hooks/useTheme";
+import { useTheme } from "../../hooks/useTheme";
 
 interface CloseTabBtnProps {
   tab: chrome.tabs.Tab;

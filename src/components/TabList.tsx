@@ -71,9 +71,21 @@ export const TabList: React.FC<TabListProps> = ({ tabs }) => {
         <Droppable droppableId="tab-tabs" key="tab-list">
           {(provided) => (
             <ul {...provided.droppableProps} ref={provided.innerRef}>
-              {tabs.map((tab: chrome.tabs.Tab, index: number) =>
-                tab.pinned ? (
-                  <TabItem key={tab.id} tab={tab} />
+              {tabs.map((tab: chrome.tabs.Tab, index: number) => {
+                let isInSameGroup = false;
+                if (tab.groupId !== -1) {
+                  if (index > 0 && index < tabs.length) {
+                    isInSameGroup =
+                      tabs[index].groupId == tabs[index - 1].groupId;
+                  }
+                }
+
+                return tab.pinned ? (
+                  <TabItem
+                    isInSameGroup={isInSameGroup}
+                    key={tab.id}
+                    tab={tab}
+                  />
                 ) : (
                   <Draggable
                     key={tab.id}
@@ -81,11 +93,16 @@ export const TabList: React.FC<TabListProps> = ({ tabs }) => {
                     index={index}
                   >
                     {(provided) => (
-                      <TabItem provided={provided} key={tab.id} tab={tab} />
+                      <TabItem
+                        isInSameGroup={isInSameGroup}
+                        provided={provided}
+                        key={tab.id}
+                        tab={tab}
+                      />
                     )}
                   </Draggable>
-                )
-              )}
+                );
+              })}
             </ul>
           )}
         </Droppable>

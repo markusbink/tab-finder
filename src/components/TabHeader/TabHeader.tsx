@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
-import { TabFinderIcon } from "../assets/icons/TabFinderIcon";
-import { useTabContext } from "../contexts/TabContext";
+import { TabFinderIcon } from "../../assets/icons/TabFinderIcon";
+import { useTabContext } from "../../contexts/TabContext";
 import { ToggleThemeBtn } from "./ToggleThemeBtn";
 
 export const TabHeader: React.FC = () => {

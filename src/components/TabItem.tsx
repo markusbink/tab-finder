@@ -1,20 +1,23 @@
 import * as React from "react";
 import Helper from "../helpers/Helper";
 import Tab from "../helpers/Tab";
-import { DraggableProvided } from "react-beautiful-dnd";
-import { ToggleAudioBtn } from "./ToggleAudioBtn";
 import styled from "styled-components";
-import { TogglePinBtn } from "./TogglePinBtn";
-import { TabAction } from "./TabActionBtn";
-import { CloseTabBtn } from "./CloseTabBtn";
+import { DraggableProvided } from "react-beautiful-dnd";
 import { ITab, useTabContext } from "../contexts/TabContext";
+import { TogglePinBtn, ToggleAudioBtn, CloseTabBtn } from "./TabButtons";
+import { TabAction } from "./TabButtons/TabActionBtn";
 
 interface TabItemProps {
   tab: ITab;
   provided?: DraggableProvided;
+  isInSameGroup?: boolean;
 }
 
-export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
+export const TabItem: React.FC<TabItemProps> = ({
+  tab,
+  provided,
+  isInSameGroup,
+}) => {
   const { tabs, setTabs, lastSelected, setLastSelected } = useTabContext();
 
   const onTabClicked = (
@@ -69,6 +72,7 @@ export const TabItem: React.FC<TabItemProps> = ({ tab, provided }) => {
     <TabItemWrapper
       {...provided?.draggableProps}
       {...provided?.dragHandleProps}
+      isInSameGroup={isInSameGroup}
       isSelected={tab.isSelected!}
       ref={provided?.innerRef}
       draggable={false}
@@ -102,12 +106,16 @@ const TabActionsWrapper = styled.div`
   border-radius: 6px;
 `;
 
-const TabItemWrapper = styled.li<{ isSelected: boolean }>`
+const TabItemWrapper = styled.li<{
+  isSelected: boolean;
+  isInSameGroup?: boolean;
+}>`
   position: relative;
   display: flex;
   align-items: center;
   background: ${({ theme }) => theme.tab.background};
   color: ${({ theme }) => theme.text};
+  margin-top: ${({ isInSameGroup }) => (isInSameGroup ? "-40px" : "0px")};
   margin-bottom: 10px;
   text-align: left;
   padding: 10px;

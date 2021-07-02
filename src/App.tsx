@@ -1,7 +1,6 @@
 import * as React from "react";
 import styled, { ThemeProvider } from "styled-components";
 import { NoTabsFound } from "./components/NoTabsFound";
-import { TabHeader } from "./components/TabHeader";
 import { TabList } from "./components/TabList";
 import { TabSearchInput } from "./components/TabSearchInput";
 import { useTabContext } from "./contexts/TabContext";
@@ -9,6 +8,9 @@ import Helper from "./helpers/Helper";
 import { GlobalStyle } from "./styles/Global";
 import { darkTheme, lightTheme } from "./styles/themes";
 import * as Constants from "./constants";
+import { Toaster } from "react-hot-toast";
+import { TabHeader } from "./components/TabHeader";
+
 const App: React.FC = () => {
   const { tabs, searchTerm } = useTabContext();
   const filteredTabs = Helper.filterTabsByTerm(tabs, searchTerm);
@@ -18,6 +20,7 @@ const App: React.FC = () => {
     <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
       <GlobalStyle />
       <AppWrapper>
+        <Toaster />
         <TabHeader />
         <TabSearchInput />
         {filteredTabs.length > 0 ? (
