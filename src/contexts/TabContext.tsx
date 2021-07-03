@@ -1,11 +1,8 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
 import Tab from "../helpers/Tab";
 
 interface ITabContext {
-  tabs: ITab[];
-  setTabs: React.Dispatch<React.SetStateAction<ITab[]>>;
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
   lastSelected: number;
   setLastSelected: (index: number) => void;
   theme: string;
@@ -17,10 +14,6 @@ export interface ITab extends chrome.tabs.Tab {
 }
 
 export const TabContext = React.createContext<ITabContext>({
-  tabs: [],
-  setTabs: () => {},
-  searchTerm: "",
-  setSearchTerm: () => {},
   lastSelected: -1,
   setLastSelected: () => {},
   theme: "dark",
@@ -31,30 +24,33 @@ interface TabContextProviderProps {
   children: React.ReactNode;
 }
 
+function useStoredValue(initialValue: string) {
+  const [theme, setTheme] = useState(initialValue);
+
+  const loadTheme = async () => {
+    // Set theme
+    chrome.storage.sync.get(["theme"], async (result) => {
+      if (!result.theme) {
+        await chrome.storage.sync.set({ theme: "dark" });
+      }
+      setTheme(result.theme);
+    });
+  };
+
+  useEffect(() => {
+    loadTheme();
+  }, []);
+
+  return theme;
+}
+
 export const TabContextProvider: React.FC<TabContextProviderProps> = ({
   children,
 }) => {
-  const [tabs, setTabs] = React.useState<ITab[]>([]);
-  const [searchTerm, setSearchTerm] = React.useState<string>("");
   const [lastSelected, setLastSelected] = React.useState<number>(-1);
-  const [theme, setTheme] = React.useState<string>("");
+  const [theme, setTheme] = useState("dark");
 
-  React.useEffect(() => {
-    (async () => {
-      // Set theme
-      chrome.storage.sync.get(["theme"], async (result) => {
-        if (!result.theme) {
-          await chrome.storage.sync.set({ theme: "dark" });
-        }
-        setTheme(result.theme);
-      });
-
-      // Get tabs
-      const currentTabs: ITab[] = await Tab.getTabs();
-
-      setTabs(currentTabs);
-    })();
-
+  useEffect(() => {
     /**
      * Temporary workaround for secondary monitors on MacOS where redraws don't happen
      * @See https://bugs.chromium.org/p/chromium/issues/detail?id=971701
@@ -98,17 +94,9 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
     }
   }, []);
 
-  React.useEffect(() => {
-    console.log(tabs);
-  }, [tabs]);
-
   return (
     <TabContext.Provider
       value={{
-        tabs,
-        setTabs,
-        searchTerm,
-        setSearchTerm,
         lastSelected,
         setLastSelected,
         theme,

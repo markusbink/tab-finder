@@ -11,7 +11,10 @@ import { useTheme } from "../../hooks/useTheme";
 import { useTabContext } from "../../contexts/TabContext";
 import Tab from "../../helpers/Tab";
 import { useContextMenu } from "../../hooks/useContextMenu";
+import { useSelector, useDispatch } from "react-redux";
 import * as Constants from "../../constants";
+import { Store } from "../../store/types";
+import { closeTabs } from "../../store/actions";
 
 interface ContextMenuProps {
   target: any;
@@ -20,19 +23,23 @@ interface ContextMenuProps {
 export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
   const contextMenuRef = React.useRef(null);
   const theme = useTheme();
-  const { tabs, setTabs } = useTabContext();
   const { isVisible, position } = useContextMenu(target, contextMenuRef);
+  // const { tabs, setTabs } = useTabContext();
+  const tabs = useSelector((state: Store) => state.tabs);
+  const dispatch = useDispatch();
 
   const onCloseTabs = async () => {
-    tabs.map((tab) => {
-      if (!tab.isSelected) {
-        return;
-      }
-      Tab.closeTabById(tab.id!);
-    });
-
-    const updatedTabs = await Tab.getTabs();
-    setTabs(updatedTabs);
+    // tabs.map((tab) => {
+    //   if (!tab.isSelected) {
+    //     return;
+    //   }
+    //   Tab.closeTabById(tab.id!);
+    // });
+    dispatch(
+      closeTabs(tabs.filter((tab) => tab.isSelected).map((tab) => tab.id!))
+    );
+    // const updatedTabs = await Tab.getTabs();
+    // setTabs(updatedTabs);
   };
 
   const onGroupTabs = async () => {
@@ -42,7 +49,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
     await chrome.tabs.group({ tabIds: highlighedTabIds });
 
     const updatedTabs = await Tab.getTabs();
-    setTabs(updatedTabs);
+    // setTabs(updatedTabs);
   };
 
   const onUngroupTabs = async () => {
@@ -52,7 +59,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
     await chrome.tabs.ungroup(highlighedTabIds);
 
     const updatedTabs = await Tab.getTabs();
-    setTabs(updatedTabs);
+    // setTabs(updatedTabs);
   };
 
   const onPinTabs = async () => {
@@ -64,7 +71,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
     });
 
     const updatedTabs = await Tab.getTabs();
-    setTabs(updatedTabs);
+    // setTabs(updatedTabs);
   };
 
   const actions = [

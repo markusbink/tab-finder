@@ -1,63 +1,77 @@
-import * as React from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import Helper from "../helpers/Helper";
 import Tab from "../helpers/Tab";
 import styled from "styled-components";
 import { DraggableProvided } from "react-beautiful-dnd";
-import { ITab, useTabContext } from "../contexts/TabContext";
+import { ITab } from "../contexts/TabContext";
 import { TogglePinBtn, ToggleAudioBtn, CloseTabBtn } from "./TabButtons";
 import { TabAction } from "./TabButtons/TabActionBtn";
+import { useTabs } from "../hooks";
+import { setTabs } from "../store/actions";
+import { isOutOfBounds } from "../helpers/array";
 
 interface TabItemProps {
   tab: ITab;
   provided?: DraggableProvided;
   isInSameGroup?: boolean;
+  lastSelected: null | number;
+  setLastSelected: Dispatch<SetStateAction<number | null>>;
+  toggleEntry: (entry: ITab) => void;
+  entries: ITab[];
 }
 
 export const TabItem: React.FC<TabItemProps> = ({
   tab,
   provided,
   isInSameGroup,
+  lastSelected,
+  setLastSelected,
+  toggleEntry,
+  entries,
 }) => {
-  const { tabs, setTabs, lastSelected, setLastSelected } = useTabContext();
-
   const onTabClicked = (
     e: React.MouseEvent<HTMLLIElement, MouseEvent>,
     index: number
   ) => {
-    if (e.metaKey) {
-      setTabs(
-        tabs.map((tab, tabIndex) => {
-          if (tabIndex === index) {
-            tab.isSelected = !tab.isSelected;
-          }
-          return tab;
-        })
-      );
-      setLastSelected(index);
-      return;
-    }
+    switch (true) {
+      case e.metaKey:
+        if (isOutOfBounds(entries, index)) {
+          return;
+        }
 
-    if (e.shiftKey) {
-      if (lastSelected === -1) {
-        return;
-      }
-      setTabs(
-        tabs.map((tab, tabIndex) => {
-          if (
-            (tabIndex <= index && tabIndex >= lastSelected) ||
-            (tabIndex >= index && tabIndex <= lastSelected)
-          ) {
-            tab.isSelected = true;
-          } else {
-            tab.isSelected = false;
-          }
-          return tab;
-        })
-      );
-      return;
-    }
+        const entry = entries[index];
+        if (entry === undefined || entry.id === undefined) {
+          return;
+        }
 
-    Tab.goToTab(index);
+        toggleEntry(entry);
+        console.log(entries);
+
+        setLastSelected(entry.id);
+        break;
+
+      case e.shiftKey:
+        if (lastSelected === null) {
+          return;
+        }
+        setTabs(
+          entries.map((tab, tabIndex) => {
+            if (
+              (tabIndex <= index && tabIndex >= lastSelected) ||
+              (tabIndex >= index && tabIndex <= lastSelected)
+            ) {
+              tab.isSelected = true;
+            } else {
+              tab.isSelected = false;
+            }
+            return tab;
+          })
+        );
+        break;
+      default:
+        Tab.goToTab(index);
+        break;
+    }
   };
 
   const renderFavicon = (tab: chrome.tabs.Tab) => {
@@ -76,7 +90,7 @@ export const TabItem: React.FC<TabItemProps> = ({
       isSelected={tab.isSelected!}
       ref={provided?.innerRef}
       draggable={false}
-      onClick={(e) => onTabClicked(e, tab.index!)}
+      onClick={(e) => onTabClicked(e, tab.index)}
     >
       {renderFavicon(tab)}
       <TabTitle>{Helper.truncate(tab.title!, 30)}</TabTitle>

@@ -1,13 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import App from "./App";
-import { TabContextProvider } from "./contexts/TabContext";
+import { store } from "./store/store";
 
 ReactDOM.render(
-    <React.StrictMode>
-        <TabContextProvider>
-            <App />
-        </TabContextProvider>
-    </React.StrictMode>,
-    document.getElementById("root")
+  <React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById("root")
 );

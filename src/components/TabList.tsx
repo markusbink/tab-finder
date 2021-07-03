@@ -1,4 +1,3 @@
-import * as React from "react";
 import { TabItem } from "./TabItem";
 import {
   DragDropContext,
@@ -6,38 +5,71 @@ import {
   Droppable,
   DropResult,
 } from "react-beautiful-dnd";
-import { ITab, useTabContext } from "../contexts/TabContext";
+import { ITab } from "../contexts/TabContext";
 import Tab from "../helpers/Tab";
 import styled from "styled-components";
 import { ContextMenu } from "./ContextMenu";
+import { useDispatch } from "react-redux";
+import { setTabs } from "../store/actions";
+import React, { useEffect, useRef, useState } from "react";
+import { useTabs } from "../hooks";
+import { useResettableState } from "react-resettable-state";
+import { useCustomArray } from "../hooks/useCustomArray";
 
-interface TabListProps {
-  tabs: ITab[];
+export function useSelectedTabs(): [ITab[], () => void, (tab: ITab) => void] {
+  const tabs = useTabs();
+  const [selectedTabIds, setSelectedTabIds] = useState<number[]>([]);
+  const [selectedTabs, resetSelectedTabs, setSelectedTabs] =
+    useResettableState<ITab[]>(tabs);
+
+  useEffect(() => {
+    setSelectedTabs(
+      tabs.filter((tab) =>
+        selectedTabIds.some((selectedTabId) => tab.id === selectedTabId)
+      )
+    );
+  }, [tabs, selectedTabIds, setSelectedTabs]);
+
+  const addSelectedTab = (tab: ITab) => {
+    if (selectedTabIds.includes(tab.id!)) {
+      return;
+    }
+
+    setSelectedTabs([...selectedTabs, tab]);
+  };
+
+  return [selectedTabs, resetSelectedTabs, addSelectedTab];
 }
 
-export const TabList: React.FC<TabListProps> = ({ tabs }) => {
-  const { setTabs } = useTabContext();
-  const tabListRef = React.useRef(null);
+export const TabList: React.FC = () => {
+  const [selectedTabs, resetSelectedTabs, addSelectedTab] = useSelectedTabs();
+  const [lastSelected, setLastSelected] = useState<number | null>(null);
+  const tabListRef = useRef(null);
+  const dispatch = useDispatch();
+  const tabs = useTabs();
+  const { entries, addEntry, toggleEntry } = useCustomArray(tabs);
 
-  React.useEffect(() => {
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        setTabs(
-          tabs.map((tab) => {
-            tab.isSelected = false;
-            return tab;
-          })
-        );
+  useEffect(() => {
+    const keyDownHandler = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") {
+        return;
       }
-    });
+      resetSelectedTabs();
+    };
+
+    document.addEventListener("keydown", keyDownHandler);
+
+    return () => {
+      document.removeEventListener("keydown", keyDownHandler);
+    };
   }, []);
 
   // Function to change the order of a list based on previous and new location
   const reorder = (
-    list: chrome.tabs.Tab[],
+    list: ITab[],
     startIndex: number,
     endIndex: number
-  ): chrome.tabs.Tab[] => {
+  ): ITab[] => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
@@ -53,7 +85,7 @@ export const TabList: React.FC<TabListProps> = ({ tabs }) => {
     const items = reorder(tabs, result.source.index, result.destination.index);
 
     // Update state with new order
-    setTabs(items);
+    dispatch(setTabs(items));
 
     // Change order of tabs based on Drag and Drop change
     const changedTabs = await Tab.getTabByIndex(result.source.index);
@@ -71,7 +103,7 @@ export const TabList: React.FC<TabListProps> = ({ tabs }) => {
         <Droppable droppableId="tab-tabs" key="tab-list">
           {(provided) => (
             <ul {...provided.droppableProps} ref={provided.innerRef}>
-              {tabs.map((tab: chrome.tabs.Tab, index: number) => {
+              {tabs.map((tab: ITab, index: number) => {
                 let isInSameGroup = false;
                 if (tab.groupId !== -1) {
                   if (index > 0 && index < tabs.length) {
@@ -85,6 +117,10 @@ export const TabList: React.FC<TabListProps> = ({ tabs }) => {
                     isInSameGroup={isInSameGroup}
                     key={tab.id}
                     tab={tab}
+                    lastSelected={lastSelected}
+                    setLastSelected={setLastSelected}
+                    toggleEntry={toggleEntry}
+                    entries={entries}
                   />
                 ) : (
                   <Draggable
@@ -98,6 +134,10 @@ export const TabList: React.FC<TabListProps> = ({ tabs }) => {
                         provided={provided}
                         key={tab.id}
                         tab={tab}
+                        lastSelected={lastSelected}
+                        setLastSelected={setLastSelected}
+                        toggleEntry={toggleEntry}
+                        entries={entries}
                       />
                     )}
                   </Draggable>

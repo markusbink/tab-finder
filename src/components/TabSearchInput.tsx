@@ -1,15 +1,21 @@
-import * as React from "react";
-import styled, { ThemeContext } from "styled-components";
+import React, { useEffect, useRef } from "react";
+import styled from "styled-components";
 import { XCircle } from "phosphor-react";
-import { useTabContext } from "../contexts/TabContext";
 import { useTheme } from "../hooks/useTheme";
 
-export const TabSearchInput: React.FC = () => {
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const { searchTerm, setSearchTerm } = useTabContext();
+interface ITabSearchInputProps {
+  searchTerm: string;
+  onSearchInput: (newSearchTerm: string) => void;
+}
+
+export const TabSearchInput: React.FC<ITabSearchInputProps> = ({
+  searchTerm,
+  onSearchInput,
+}) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const theme = useTheme();
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Make input focusable when popup opens
     inputRef?.current?.focus();
 
@@ -18,29 +24,25 @@ export const TabSearchInput: React.FC = () => {
         // Prevent popup from closing
         e.preventDefault();
         // Clear input
-        setSearchTerm("");
+        onSearchInput("");
         // Defocus input
         inputRef?.current?.blur();
       }
     });
   }, []);
 
-  const onInputChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
-
   return (
     <SearchWrapper>
       <SearchInput
         ref={inputRef}
-        onChange={onInputChanged}
+        onChange={(e) => onSearchInput(e.target.value)}
         className="search"
         type="text"
         placeholder="What tab are you looking for?"
         value={searchTerm}
       />
       {searchTerm && (
-        <ClearIcon onClick={() => setSearchTerm("")} className="clear-icon">
+        <ClearIcon onClick={() => onSearchInput("")} className="clear-icon">
           <XCircle size="100%" weight="fill" color={theme.action.background} />
         </ClearIcon>
       )}

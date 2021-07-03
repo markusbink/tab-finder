@@ -1,12 +1,12 @@
 import * as React from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { TabFinderIcon } from "../../assets/icons/TabFinderIcon";
-import { useTabContext } from "../../contexts/TabContext";
+import { Store } from "../../store/types";
 import { ToggleThemeBtn } from "./ToggleThemeBtn";
 
 export const TabHeader: React.FC = () => {
-  const { tabs } = useTabContext();
-
+  const tabs = useSelector((state: Store) => state.tabs);
   return (
     <Header>
       <LogoWrapper>
