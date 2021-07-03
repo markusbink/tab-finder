@@ -11,8 +11,7 @@ interface CloseTabBtnProps {
 }
 
 export const CloseTabBtn: React.FC<CloseTabBtnProps> = ({ tab }) => {
-  const { tabs, setTabs, setTabCount, searchTerm, setSearchTerm } =
-    useTabContext();
+  const { tabs, setTabs, searchTerm, setSearchTerm } = useTabContext();
   const theme = useTheme();
 
   const closeTab = async (
@@ -25,7 +24,6 @@ export const CloseTabBtn: React.FC<CloseTabBtnProps> = ({ tab }) => {
 
     // Update UI in extension popup
     setTabs(tabs.filter((tab) => tab.id !== tabId));
-    setTabCount(tabs.filter((tab) => tab.id !== tabId).length);
 
     // Remove filtering if no more tabs match filter criterion
     if (!searchTerm) {

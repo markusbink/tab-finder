@@ -6,8 +6,6 @@ interface ITabContext {
   setTabs: React.Dispatch<React.SetStateAction<ITab[]>>;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  tabCount: number;
-  setTabCount: (count: number) => void;
   lastSelected: number;
   setLastSelected: (index: number) => void;
   theme: string;
@@ -23,8 +21,6 @@ export const TabContext = React.createContext<ITabContext>({
   setTabs: () => {},
   searchTerm: "",
   setSearchTerm: () => {},
-  tabCount: 0,
-  setTabCount: () => {},
   lastSelected: -1,
   setLastSelected: () => {},
   theme: "dark",
@@ -40,7 +36,6 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
 }) => {
   const [tabs, setTabs] = React.useState<ITab[]>([]);
   const [searchTerm, setSearchTerm] = React.useState<string>("");
-  const [tabCount, setTabCount] = React.useState<number>(0);
   const [lastSelected, setLastSelected] = React.useState<number>(-1);
   const [theme, setTheme] = React.useState<string>("");
 
@@ -57,7 +52,6 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
       // Get tabs
       const currentTabs: ITab[] = await Tab.getTabs();
 
-      setTabCount(currentTabs.length);
       setTabs(currentTabs);
     })();
 
@@ -115,8 +109,6 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
         setTabs,
         searchTerm,
         setSearchTerm,
-        tabCount,
-        setTabCount,
         lastSelected,
         setLastSelected,
         theme,
@@ -129,7 +121,5 @@ export const TabContextProvider: React.FC<TabContextProviderProps> = ({
 };
 
 export const useTabContext = (): ITabContext => {
-  const context = React.useContext(TabContext);
-  if (!context) throw new Error("TabContext must be used with TabProvider!");
-  return context;
+  return React.useContext(TabContext);
 };

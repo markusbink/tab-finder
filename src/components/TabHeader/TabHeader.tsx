@@ -5,14 +5,14 @@ import { useTabContext } from "../../contexts/TabContext";
 import { ToggleThemeBtn } from "./ToggleThemeBtn";
 
 export const TabHeader: React.FC = () => {
-  const { tabCount } = useTabContext();
+  const { tabs } = useTabContext();
 
   return (
     <Header>
       <LogoWrapper>
         <TabFinderIcon />
         <Title>TabFinder</Title>
-        <TabCount>{tabCount}</TabCount>
+        <TabCount>{tabs.length}</TabCount>
       </LogoWrapper>
       <ToggleThemeBtn />
     </Header>
