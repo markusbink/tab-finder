@@ -1,40 +1,35 @@
 import { useEffect, useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
-import { NoTabsFound } from "./components/NoTabsFound";
 import { TabList } from "./components/TabList";
 import { TabSearchInput } from "./components/TabSearchInput";
-import { useTabContext } from "./contexts/TabContext";
 import { GlobalStyle } from "./constants/Global";
 import { darkTheme, lightTheme } from "./constants/themes";
 import * as Constants from "./constants";
-import { Toaster } from "react-hot-toast";
 import { TabHeader } from "./components/TabHeader";
-import { useDispatch } from "react-redux";
-import { getTabs } from "./store/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { getTabs, loadTheme } from "./store/actions";
 import { useFilteredTabs } from "./hooks";
+import { AppState } from "./store/types";
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const filteredTabs = useFilteredTabs(searchTerm);
-  const { theme } = useTabContext();
+  const themeSelector = (store: AppState) => store.theme;
+  const theme = useSelector(themeSelector);
 
   useEffect(() => {
     dispatch(getTabs());
+    dispatch(loadTheme());
   }, [dispatch]);
 
   return (
     <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
       <GlobalStyle />
       <AppWrapper>
-        <Toaster />
         <TabHeader />
         <TabSearchInput searchTerm={searchTerm} onSearchInput={setSearchTerm} />
-        {filteredTabs.length > 0 ? (
-          <TabList tabs={filteredTabs} />
-        ) : (
-          <NoTabsFound />
-        )}
+        <TabList tabs={filteredTabs} />
       </AppWrapper>
     </ThemeProvider>
   );

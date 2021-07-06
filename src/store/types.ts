@@ -4,5 +4,5 @@ export interface ITab extends chrome.tabs.Tab {
 
 export interface AppState {
   tabs: ITab[];
-  searchTerm: string;
+  theme: string;
 }

@@ -1,79 +1,113 @@
-import * as React from "react";
 import styled, { keyframes } from "styled-components";
 import { ContextMenuItem } from "./ContextMenuItem";
 import {
   FolderNotchMinus,
   FolderNotchPlus,
   PushPinSimple,
+  PushPinSimpleSlash,
   XCircle,
 } from "phosphor-react";
 import { useTheme } from "../../hooks/useTheme";
-import { useTabContext } from "../../contexts/TabContext";
 import Tab from "../../helpers/Tab";
 import { useContextMenu } from "../../hooks/useContextMenu";
 import { useSelector, useDispatch } from "react-redux";
 import * as Constants from "../../constants";
-import { Store } from "../../store/types";
-import { closeTabs } from "../../store/actions";
+import { AppState } from "../../store/types";
+import {
+  closeTabs,
+  groupTabs,
+  pinTabs,
+  ungroupTabs,
+  unpinTabs,
+} from "../../store/actions";
+import { useRef } from "react";
 
 interface ContextMenuProps {
-  target: any;
+  target: React.MutableRefObject<null>;
 }
 
 export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
-  const contextMenuRef = React.useRef(null);
+  const contextMenuRef = useRef(null);
   const theme = useTheme();
   const { isVisible, position } = useContextMenu(target, contextMenuRef);
-  // const { tabs, setTabs } = useTabContext();
-  const tabs = useSelector((state: Store) => state.tabs);
+  const tabs = useSelector((state: AppState) => state.tabs);
   const dispatch = useDispatch();
 
-  const onCloseTabs = async () => {
-    // tabs.map((tab) => {
-    //   if (!tab.isSelected) {
-    //     return;
-    //   }
-    //   Tab.closeTabById(tab.id!);
-    // });
+  /**
+   * Closes all tabs that have been selected
+   */
+  const onCloseTabs = () => {
+    tabs.map((tab) => {
+      if (!tab.isSelected) {
+        return;
+      }
+      Tab.closeTabById(tab.id!);
+    });
+
     dispatch(
       closeTabs(tabs.filter((tab) => tab.isSelected).map((tab) => tab.id!))
     );
-    // const updatedTabs = await Tab.getTabs();
-    // setTabs(updatedTabs);
   };
 
+  /**
+   * Groups all tabs that have been selected
+   */
   const onGroupTabs = async () => {
     const highlighedTabIds: number[] = tabs
       .filter((tab) => tab.isSelected!)
       .map((tab) => tab.id!);
     await chrome.tabs.group({ tabIds: highlighedTabIds });
 
-    const updatedTabs = await Tab.getTabs();
-    // setTabs(updatedTabs);
+    const udpatedTabs = await Tab.getTabs();
+    dispatch(groupTabs(udpatedTabs));
   };
 
+  /**
+   * Ungroups all tabs that have been selected
+   */
   const onUngroupTabs = async () => {
     const highlighedTabIds: number[] = tabs
       .filter((tab) => tab.isSelected!)
       .map((tab) => tab.id!);
     await chrome.tabs.ungroup(highlighedTabIds);
 
-    const updatedTabs = await Tab.getTabs();
-    // setTabs(updatedTabs);
+    const udpatedTabs = await Tab.getTabs();
+    dispatch(ungroupTabs(udpatedTabs));
   };
 
+  /**
+   * Pins all tabs that have been selected
+   */
   const onPinTabs = async () => {
     tabs.map(async (tab) => {
       if (!tab.isSelected) {
         return;
       }
-      await Tab.update(tab.id!, { pinned: !tab.pinned });
+      await Tab.update(tab.id!, { pinned: true });
     });
 
-    const updatedTabs = await Tab.getTabs();
-    // setTabs(updatedTabs);
+    const udpatedTabs = await Tab.getTabs();
+    dispatch(pinTabs(udpatedTabs));
   };
 
+  /**
+   * Unpins all tabs that have been selected
+   */
+  const onUnpinTabs = async () => {
+    tabs.map(async (tab) => {
+      if (!tab.isSelected) {
+        return;
+      }
+      await Tab.update(tab.id!, { pinned: false });
+    });
+
+    const udpatedTabs = await Tab.getTabs();
+    dispatch(unpinTabs(udpatedTabs));
+  };
+
+  /**
+   * Actions and labels to be used in the ContextMenu UI
+   */
   const actions = [
     {
       icon: <XCircle color={theme.text} size="100%" />,
@@ -95,6 +129,11 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
       label: "Pin tabs",
       callback: onPinTabs,
     },
+    {
+      icon: <PushPinSimpleSlash color={theme.text} size="100%" />,
+      label: "Unpin tabs",
+      callback: onUnpinTabs,
+    },
   ];
 
   return (
@@ -105,6 +144,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ target }) => {
     >
       {actions.map((action) => (
         <ContextMenuItem
+          key={action.label}
           icon={action.icon}
           label={action.label}
           callback={action.callback}

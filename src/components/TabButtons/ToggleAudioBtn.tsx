@@ -3,24 +3,18 @@ import { SpeakerHigh, SpeakerX } from "phosphor-react";
 import Tab from "../../helpers/Tab";
 import { TabActionBtn } from "./TabActionBtn";
 import { useTheme } from "../../hooks/useTheme";
+import { toggleTabAudio } from "../../store/actions";
+import { useDispatch } from "react-redux";
 
 interface ToggleAudioBtnProps {
   tab: chrome.tabs.Tab;
 }
 
 export const ToggleAudioBtn: React.FC<ToggleAudioBtnProps> = ({ tab }) => {
-  const [isMuted, setIsMuted] = React.useState<boolean>(false);
   const theme = useTheme();
+  const dispatch = useDispatch();
 
-  // Initially check whether a tab is muted or not
-  React.useEffect(() => {
-    chrome.tabs.get(tab.id!, async (tab) => {
-      const muted = tab?.mutedInfo?.muted;
-      setIsMuted(() => !!muted);
-    });
-  }, [tab.id]);
-
-  const toggleAudio = (
+  const onToggleAudio = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     tabId: number
   ): void => {
@@ -28,13 +22,14 @@ export const ToggleAudioBtn: React.FC<ToggleAudioBtnProps> = ({ tab }) => {
     chrome.tabs.get(tabId, async (tab) => {
       const muted = !tab.mutedInfo?.muted;
       await Tab.update(tab.id!, { muted });
-      setIsMuted(muted);
+
+      dispatch(toggleTabAudio(tabId));
     });
   };
 
   return (
-    <TabActionBtn onClick={(e) => toggleAudio(e, tab.id!)}>
-      {isMuted ?? !tab.audible ? (
+    <TabActionBtn onClick={(e) => onToggleAudio(e, tab.id!)}>
+      {tab!.mutedInfo!.muted ?? !tab.audible ? (
         <SpeakerX size="100%" color={theme.action.icon} />
       ) : (
         <SpeakerHigh size="100%" color={theme.action.icon} />

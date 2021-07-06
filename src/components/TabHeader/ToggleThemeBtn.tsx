@@ -1,25 +1,28 @@
 import * as React from "react";
 import { MoonStars, Sun } from "phosphor-react";
-import { useTabContext } from "../../contexts/TabContext";
 import { TabActionBtn } from "../TabButtons/TabActionBtn";
 import { useTheme } from "../../hooks/useTheme";
+import { useDispatch, useSelector } from "react-redux";
+import { setTheme } from "../../store/actions";
+import { AppState } from "../../store/types";
 
 export const ToggleThemeBtn: React.FC = () => {
-  const { theme, setTheme } = useTabContext();
+  const dispatch = useDispatch();
   const styledTheme = useTheme();
+  const theme = useSelector((store: AppState) => store.theme);
 
   const toggleTheme = () => {
     switch (theme) {
       case "dark":
-        setTheme("light");
+        dispatch(setTheme("light"));
         chrome.storage.sync.set({ theme: "light" });
         break;
       case "light":
-        setTheme("dark");
+        dispatch(setTheme("dark"));
         chrome.storage.sync.set({ theme: "dark" });
         break;
       default:
-        setTheme("dark");
+        dispatch(setTheme("dark"));
     }
   };
 

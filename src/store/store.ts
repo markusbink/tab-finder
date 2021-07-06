@@ -1,18 +1,21 @@
 import { createStore, applyMiddleware } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
+import { composeWithDevTools } from "redux-devtools-extension/logOnlyInProduction";
 import thunk from "redux-thunk";
 import {
   ActionType,
   CLOSE_TAB,
   CLOSE_TABS,
   TOGGLE_TAB_PIN,
-  TOGGLE_TAB_PINS,
+  PIN_TABS,
+  UNPIN_TABS,
   SET_TABS,
   TOGGLE_TAB_AUDIO,
   TOGGLE_TAB_SELECT,
   SELECT_TABS,
   GROUP_TABS,
   UNGROUP_TABS,
+  DESELECT_TABS,
+  SET_THEME,
 } from "./actions";
 import { ITab, AppState } from "./types";
 
@@ -21,47 +24,43 @@ const closeTab = (tabs: ITab[], id: number): ITab[] => {
 };
 
 const closeTabs = (tabs: ITab[], ids: number[]): ITab[] => {
-  return tabs.filter((tab) => ids.includes(tab.id!));
+  return tabs.filter((tab) => !ids.includes(tab.id!));
 };
 
 const toggleTabPin = (tabs: ITab[], id: number): ITab[] => {
   return tabs.map((tab) => ({
     ...tab,
-    pinned: !(tab.id === id),
-  }));
-};
-
-const toggleTabsPin = (tabs: ITab[], ids: number[]): ITab[] => {
-  return tabs.map((tab) => ({
-    ...tab,
-    pinned: !ids.includes(tab.id!),
+    pinned: tab.id === id ? !tab.pinned : tab.pinned,
   }));
 };
 
 const toggleTabSelect = (tabs: ITab[], id: number): ITab[] => {
   return tabs.map((tab) => ({
     ...tab,
-    isSelected: tab.id === id,
+    isSelected: tab.id === id ? !tab.isSelected : tab.isSelected,
   }));
 };
 
 const toggleTabAudio = (tabs: ITab[], id: number) => {
   return tabs.map((tab) => ({
     ...tab,
-    mutedInfo: {
-      muted: !tab.mutedInfo?.muted,
-    },
+    mutedInfo:
+      tab.id === id
+        ? {
+            muted: !tab.mutedInfo?.muted,
+          }
+        : tab.mutedInfo,
   }));
 };
 
 const selectTabs = (tabs: ITab[], ids: number[]) => {
   return tabs.map((tab) => ({
     ...tab,
-    isSelected: ids.includes(tab.id!) ? true : tab.isSelected,
+    isSelected: ids.includes(tab.id!) ? true : tab.highlighted,
   }));
 };
 
-export const deselectTabs = (tabs: ITab[]) => {
+const deselectTabs = (tabs: ITab[]) => {
   return tabs.map((tab) => ({
     ...tab,
     isSelected: false,
@@ -69,7 +68,7 @@ export const deselectTabs = (tabs: ITab[]) => {
 };
 
 const tabReducer = (
-  state: AppState = { tabs: [], searchTerm: "" },
+  state: AppState = { tabs: [], theme: "dark" },
   action: ActionType
 ) => {
   switch (action.type) {
@@ -93,10 +92,15 @@ const tabReducer = (
         ...state,
         tabs: toggleTabPin(state.tabs, action.payload),
       };
-    case TOGGLE_TAB_PINS:
+    case PIN_TABS:
       return {
         ...state,
-        tabs: toggleTabsPin(state.tabs, action.payload),
+        tabs: action.payload,
+      };
+    case UNPIN_TABS:
+      return {
+        ...state,
+        tabs: action.payload,
       };
     case TOGGLE_TAB_AUDIO:
       return {
@@ -113,6 +117,11 @@ const tabReducer = (
         ...state,
         tabs: selectTabs(state.tabs, action.payload),
       };
+    case DESELECT_TABS:
+      return {
+        ...state,
+        tabs: deselectTabs(state.tabs),
+      };
     case GROUP_TABS:
       return {
         ...state,
@@ -122,6 +131,11 @@ const tabReducer = (
       return {
         ...state,
         tabs: action.payload,
+      };
+    case SET_THEME:
+      return {
+        ...state,
+        theme: action.payload,
       };
     default:
       return state;

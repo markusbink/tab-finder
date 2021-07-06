@@ -1,20 +1,19 @@
-import * as React from "react";
+import Tab from "../../helpers/Tab";
 import { PushPinSimple, PushPinSimpleSlash } from "phosphor-react";
 import { useTheme } from "../../hooks/useTheme";
-import Tab from "../../helpers/Tab";
-import { useTabContext } from "../../contexts/TabContext";
 import { TabActionBtn } from "./TabActionBtn";
+import { togglePinTab } from "../../store/actions";
+import { useDispatch } from "react-redux";
 
 interface TogglePinBtnProps {
   tab: chrome.tabs.Tab;
 }
 
 export const TogglePinBtn: React.FC<TogglePinBtnProps> = ({ tab }) => {
-  const [isPinned, setIsPinned] = React.useState(tab.pinned);
-  const { setTabs } = useTabContext();
   const theme = useTheme();
+  const dispatch = useDispatch();
 
-  const togglePin = async (
+  const onTogglePin = async (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     tabId: number
   ): Promise<void> => {
@@ -22,18 +21,14 @@ export const TogglePinBtn: React.FC<TogglePinBtnProps> = ({ tab }) => {
 
     // Update whether tab is pinned or not
     chrome.tabs.get(tabId, async (tab) => {
-      await Tab.update(tab.id!, { pinned: !isPinned });
-      setIsPinned((prevIsPinned) => !prevIsPinned);
-
-      // Set tabs again to make them not draggable if they are pinned
-      const tabs = await Tab.getTabs();
-      setTabs(tabs);
+      await Tab.update(tab.id!, { pinned: !tab.pinned });
+      dispatch(togglePinTab(tabId));
     });
   };
 
   return (
-    <TabActionBtn onClick={(e) => togglePin(e, tab.id!)}>
-      {isPinned ? (
+    <TabActionBtn onClick={(e) => onTogglePin(e, tab.id!)}>
+      {tab.pinned ? (
         <PushPinSimpleSlash size="100%" color={theme.action.icon} />
       ) : (
         <PushPinSimple size="100%" color={theme.action.icon} />

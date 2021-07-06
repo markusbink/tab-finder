@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import Helper from "../helpers/Helper";
 import Tab from "../helpers/Tab";
 import styled from "styled-components";
@@ -6,18 +6,17 @@ import { DraggableProvided } from "react-beautiful-dnd";
 import { ITab } from "../contexts/TabContext";
 import { TogglePinBtn, ToggleAudioBtn, CloseTabBtn } from "./TabButtons";
 import { TabAction } from "./TabButtons/TabActionBtn";
-import { useTabs } from "../hooks";
-import { setTabs } from "../store/actions";
+import { setTabs, toggleTabSelect } from "../store/actions";
 import { isOutOfBounds } from "../helpers/array";
+import { useDispatch } from "react-redux";
+import { useTabs } from "../hooks";
 
 interface TabItemProps {
   tab: ITab;
-  provided?: DraggableProvided;
+  provided: DraggableProvided;
   isInSameGroup?: boolean;
   lastSelected: null | number;
   setLastSelected: Dispatch<SetStateAction<number | null>>;
-  toggleEntry: (entry: ITab) => void;
-  entries: ITab[];
 }
 
 export const TabItem: React.FC<TabItemProps> = ({
@@ -26,46 +25,47 @@ export const TabItem: React.FC<TabItemProps> = ({
   isInSameGroup,
   lastSelected,
   setLastSelected,
-  toggleEntry,
-  entries,
 }) => {
+  const tabs = useTabs();
+  const dispatch = useDispatch();
+
   const onTabClicked = (
     e: React.MouseEvent<HTMLLIElement, MouseEvent>,
     index: number
   ) => {
     switch (true) {
       case e.metaKey:
-        if (isOutOfBounds(entries, index)) {
+        if (isOutOfBounds(tabs, index)) {
           return;
         }
 
-        const entry = entries[index];
-        if (entry === undefined || entry.id === undefined) {
+        const selectedTab = tabs[index];
+        if (selectedTab.id === undefined) {
           return;
         }
 
-        toggleEntry(entry);
-        console.log(entries);
-
-        setLastSelected(entry.id);
+        dispatch(toggleTabSelect(selectedTab.id));
+        setLastSelected(selectedTab.index);
         break;
 
       case e.shiftKey:
         if (lastSelected === null) {
           return;
         }
-        setTabs(
-          entries.map((tab, tabIndex) => {
-            if (
-              (tabIndex <= index && tabIndex >= lastSelected) ||
-              (tabIndex >= index && tabIndex <= lastSelected)
-            ) {
-              tab.isSelected = true;
-            } else {
-              tab.isSelected = false;
-            }
-            return tab;
-          })
+        dispatch(
+          setTabs(
+            tabs.map((tab, tabIndex) => {
+              if (
+                (tabIndex <= index && tabIndex >= lastSelected) ||
+                (tabIndex >= index && tabIndex <= lastSelected)
+              ) {
+                tab.isSelected = true;
+              } else {
+                tab.isSelected = false;
+              }
+              return tab;
+            })
+          )
         );
         break;
       default:
@@ -84,11 +84,11 @@ export const TabItem: React.FC<TabItemProps> = ({
 
   return (
     <TabItemWrapper
-      {...provided?.draggableProps}
-      {...provided?.dragHandleProps}
+      {...provided.draggableProps}
+      {...provided.dragHandleProps}
       isInSameGroup={isInSameGroup}
       isSelected={tab.isSelected!}
-      ref={provided?.innerRef}
+      ref={provided.innerRef}
       draggable={false}
       onClick={(e) => onTabClicked(e, tab.index)}
     >

@@ -1,20 +1,19 @@
-import React from "react";
-import { XCircle } from "phosphor-react";
-import { useTabContext } from "../../contexts/TabContext";
-import Helper from "../../helpers/Helper";
 import Tab from "../../helpers/Tab";
+import { XCircle } from "phosphor-react";
 import { TabActionBtn } from "./TabActionBtn";
 import { useTheme } from "../../hooks/useTheme";
+import { useDispatch } from "react-redux";
+import { closeTab } from "../../store/actions";
 
 interface CloseTabBtnProps {
   tab: chrome.tabs.Tab;
 }
 
 export const CloseTabBtn: React.FC<CloseTabBtnProps> = ({ tab }) => {
-  const { tabs, setTabs, searchTerm, setSearchTerm } = useTabContext();
+  const dispatch = useDispatch();
   const theme = useTheme();
 
-  const closeTab = async (
+  const onCloseTab = async (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     tabId: number
   ): Promise<void> => {
@@ -23,21 +22,11 @@ export const CloseTabBtn: React.FC<CloseTabBtnProps> = ({ tab }) => {
     await Tab.closeTabById(tabId);
 
     // Update UI in extension popup
-    setTabs(tabs.filter((tab) => tab.id !== tabId));
-
-    // Remove filtering if no more tabs match filter criterion
-    if (!searchTerm) {
-      return;
-    }
-    const filteredTabs = Helper.filterTabsByTerm(tabs, searchTerm);
-
-    if (filteredTabs.length === 0) {
-      setSearchTerm("");
-    }
+    dispatch(closeTab(tabId));
   };
 
   return (
-    <TabActionBtn onClick={async (e) => await closeTab(e, tab.id!)}>
+    <TabActionBtn onClick={async (e) => await onCloseTab(e, tab.id!)}>
       <XCircle size="100%" color={theme.action.icon} />
     </TabActionBtn>
   );

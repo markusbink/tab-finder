@@ -8,7 +8,6 @@ interface ICustomArrayHook<T> {
   toggleEntry: (entry: T) => void;
   resetArray: () => void;
 }
-
 export function useCustomArray<T>(initialValue: T[]): ICustomArrayHook<T> {
   const [value, setValue] = useState<T[]>(initialValue);
 
@@ -28,18 +27,6 @@ export function useCustomArray<T>(initialValue: T[]): ICustomArrayHook<T> {
 
   const toggleEntry = (entry: T) =>
     hasEntry(entry) ? removeEntry(entry) : addEntry(entry);
-
-  const isInRange = (beginning: number, end) => {
-      value.map((tab, tabIndex) => {
-            if (
-              (tabIndex <= index && tabIndex >= lastSelected) ||
-              (tabIndex >= index && tabIndex <= lastSelected)
-            ) {
-              tab.isSelected = true;
-            } else {
-              tab.isSelected = false;
-            }
-  }
 
   const resetArray = () => setValue([]);
 
