@@ -6,13 +6,13 @@ import {
   Droppable,
   DropResult,
 } from "react-beautiful-dnd";
-import { ITab } from "../contexts/TabContext";
 import Tab from "../helpers/Tab";
 import styled from "styled-components";
 import { ContextMenu } from "./ContextMenu";
 import { useDispatch } from "react-redux";
 import { deselectTabs, setTabs } from "../store/actions";
 import { NoTabsFound } from "./NoTabsFound";
+import { ITab } from "../store/types";
 interface TabListProps {
   tabs: ITab[];
 }
@@ -65,11 +65,12 @@ export const TabList: React.FC<TabListProps> = ({ tabs }) => {
       return;
     }
 
-    // Update state with new order
-    const items = reorder(tabs, source.index, destination.index);
-    dispatch(setTabs(items));
-
     await Tab.move(changedTab.id, destination.index);
+    const updatedTabs = await Tab.getTabs();
+
+    // Update state with new order
+    // const items = reorder(tabs, source.index, destination.index);
+    dispatch(setTabs(updatedTabs));
   };
 
   return tabs.length > 0 ? (

@@ -3,13 +3,13 @@ import Helper from "../helpers/Helper";
 import Tab from "../helpers/Tab";
 import styled from "styled-components";
 import { DraggableProvided } from "react-beautiful-dnd";
-import { ITab } from "../contexts/TabContext";
 import { TogglePinBtn, ToggleAudioBtn, CloseTabBtn } from "./TabButtons";
 import { TabAction } from "./TabButtons/TabActionBtn";
 import { setTabs, toggleTabSelect } from "../store/actions";
 import { isOutOfBounds } from "../helpers/array";
 import { useDispatch } from "react-redux";
 import { useTabs } from "../hooks";
+import { ITab } from "../store/types";
 
 interface TabItemProps {
   tab: ITab;
@@ -153,9 +153,9 @@ const TabItemWrapper = styled.li<{
     user-select: none;
   }
 
-  &:focus {
+  /* &:focus {
     border: 2px solid ${({ theme }) => theme.success};
-  }
+  } */
 
   &:hover ${TabAction} {
     display: inline-block;
