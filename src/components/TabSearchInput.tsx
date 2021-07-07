@@ -35,7 +35,7 @@ export const TabSearchInput: React.FC<ITabSearchInputProps> = ({
     <SearchWrapper>
       <SearchInput
         ref={inputRef}
-        onChange={(e) => onSearchInput(e.target.value)}
+        onChange={(e) => onSearchInput(e.target.value.trim())}
         className="search"
         type="text"
         placeholder="What tab are you looking for?"
